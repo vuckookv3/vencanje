@@ -284,6 +284,16 @@
        Putanja stoji u HTML-u, pa je ovde ne treba postavljati.            */
     $$('[data-cal-google]').forEach(function (a) { a.href = gcal; });
 
+    /* Apple: webcal:// je isti fajl, samo druga shema. iOS je vezuje za
+       Kalendar, pa Safari uopšte ne ulazi u „snimi fajl" logiku (zbog koje je
+       stizao fajl bez imena, „Unknown"). Adresu izvlačimo iz .ics linka, pa
+       radi i na /real i na bilo kom domenu — bez hardkodovanja.            */
+    var icsLink = $('[data-cal-ics]');
+    if (icsLink) {
+      var webcal = icsLink.href.replace(/^https?:/, 'webcal:');
+      $$('[data-cal-apple]').forEach(function (a) { a.href = webcal; });
+    }
+
     // padajući meni
     $$('[data-cal]').forEach(function (wrap) {
       var btn = wrap.querySelector('button'), menu = wrap.querySelector('.cal__menu');
