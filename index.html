@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="sr-Latn-RS">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jelena, Marko i Sofija · 08.11.2026.</title>
+<meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
+<meta name="theme-color" content="#2F5D5B">
+<!-- Chrome / Google Translate: ne predlaži prevod ove strane. Sajt je namerno
+     samo na srpskom, pa gostima ne treba da iskače traka „Prevedi stranu?". -->
+<meta name="google" content="notranslate">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sr_RS">
+<meta property="og:title" content="Jelena, Marko i Sofija · 08.11.2026.">
+<meta property="og:description" content="Pozivamo Vas na naše venčanje i Sofijin prvi rođendan — 8. novembra 2026. u Kraljevu.">
+<meta property="og:image" content="img/hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/hero.jpg" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="grain" aria-hidden="true"></div>
+<a class="skip-link" href="#poziv">Preskoči na sadržaj</a>
+
+<!-- ============================ NAVIGACIJA ============================ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__mark" href="#hero" aria-label="Na vrh strane">
+      <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+      <span class="nav__toggle-lines" aria-hidden="true"><i></i><i></i></span>
+      <span class="nav__toggle-text">Meni</span>
+    </button>
+
+    <nav class="nav__menu" id="navMenu" aria-label="Glavna navigacija">
+      <ul>
+        <li><a href="#prica">Naša priča</a></li>
+        <li><a href="#sofija">Sofija</a></li>
+        <li><a href="#program">Program</a></li>
+        <li><a href="#lokacija">Lokacija</a></li>
+        <li><a href="#smestaj">Smeštaj</a></li>
+        <li><a href="#pitanja">Pitanja</a></li>
+      </ul>
+      <a class="btn btn--ghost nav__cta" href="#rsvp">Potvrdi dolazak</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================== HERO =============================== -->
+<section class="hero" id="hero">
+  <div class="hero__media">
+    <img src="img/hero.jpg" alt="Mladenci u jesenjoj šumi" width="1500" height="960" fetchpriority="high">
+  </div>
+
+  <div class="hero__card" id="heroCard">
+    <span class="hero__thread" aria-hidden="true"></span>
+    <p class="hero__eyebrow">Venčavamo se!</p>
+
+    <svg class="monogram" viewBox="0 0 200 122" role="img" aria-label="Monogram: Jelena, Marko i Sofija">
+      <line class="mono__thread" x1="100" y1="0" x2="100" y2="20"/>
+      <text class="mono__s" x="54.59" y="92">S</text>
+      <text class="mono__j" x="24.34" y="92">J</text>
+      <text class="mono__m" x="102.03" y="92">M</text>
+    </svg>
+
+    <h1 class="hero__names" data-split>Jelena, Marko i Sofija</h1>
+
+    <p class="hero__date"><span>08</span><i aria-hidden="true">·</i><span>11</span><i aria-hidden="true">·</i><span>2026</span></p>
+    <p class="hero__place" data-cfg="venue-short">Restoran DIVINE, Kraljevo</p>
+
+    <div class="hero__actions">
+      <a class="btn btn--solid" href="#rsvp">Potvrdi dolazak</a>
+      <div class="cal" data-cal>
+        <button class="btn btn--outline" type="button" aria-expanded="false">Dodaj u kalendar</button>
+        <div class="cal__menu" hidden>
+          <a data-cal-google href="#" target="_blank" rel="noopener">Google kalendar</a>
+          <a data-cal-ics href="#" download="jelena-marko-sofija.ics">Apple / Outlook (.ics)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#poziv" aria-label="Nastavi dalje"><span></span></a>
+</section>
+
+<!-- ============================== POZIV ============================== -->
+<section class="poziv" id="poziv">
+  <div class="wrap wrap--narrow center">
+    <span class="ornament" aria-hidden="true"></span>
+    <p class="poziv__line" data-reveal>Sa zadovoljstvom Vas pozivamo na naše&nbsp;venčanje i prvi&nbsp;rođendan.</p>
+    <p class="poziv__sign" data-reveal data-reveal-delay="1">Jelena, Marko i Sofija</p>
+  </div>
+</section>
+
+<!-- ============================ ODBROJAVANJE ========================= -->
+<section class="count" id="odbrojavanje">
+  <div class="wrap center">
+    <p class="label" data-reveal>Do našeg dana</p>
+    <div class="count__grid" id="countdown" data-reveal data-reveal-delay="1" role="timer" aria-live="off">
+      <div class="count__cell"><span class="count__num" data-cd="days">—</span><span class="count__lbl">dana</span></div>
+      <div class="count__cell"><span class="count__num" data-cd="hours">—</span><span class="count__lbl">sati</span></div>
+      <div class="count__cell"><span class="count__num" data-cd="minutes">—</span><span class="count__lbl">minuta</span></div>
+      <div class="count__cell"><span class="count__num" data-cd="seconds">—</span><span class="count__lbl">sekundi</span></div>
+    </div>
+    <p class="count__done" id="countdownDone" hidden>Hvala Vam što ste ovaj dan proveli sa nama.</p>
+  </div>
+</section>
+
+<!-- ============================ NAŠA PRIČA =========================== -->
+<section class="section section--cream" id="prica">
+  <div class="wrap">
+    <p class="label label--sticky" data-reveal>01 — Naša priča</p>
+
+    <div class="split">
+      <div class="split__text" data-reveal>
+        <h2 class="h2">Kako smo stigli dovde</h2>
+        <!-- TODO Marko: zameni ovaj tekst vašom pravom pričom. -->
+        <p>Sve je počelo jednim običnim danom koji se nije završio kao obično. Od prvog
+           razgovora do prve zajedničke jutarnje kafe prošlo je manje vremena nego što
+           smo mogli da poverujemo.</p>
+        <p>Godine su nam donele selidbe, putovanja, smeh do suza i one tihe večeri kada
+           je najlepše ćutati zajedno. Naučili smo da se najvažnije stvari ne planiraju —
+           one se prosto dese.</p>
+        <p>A onda je došla Sofija i sve što smo mislili da znamo o sreći dobilo je novo
+           ime. Sada nam ostaje samo jedna formalnost i jedna svećica.</p>
+      </div>
+
+      <figure class="split__media" data-reveal data-reveal-delay="1">
+        <img src="img/story.jpg" alt="Mladenci u jesenjem parku" width="1000" height="1250" loading="lazy">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRAKA 1 ============================== -->
+<div class="band" data-parallax>
+  <div class="band__media"><img src="img/band-1.jpg" alt="" width="1800" height="1000" loading="lazy"></div>
+</div>
+
+<!-- ============================== SOFIJA ============================= -->
+<section class="section section--blush" id="sofija">
+  <div class="wrap">
+    <p class="label label--sticky" data-reveal>02 — Sofija</p>
+
+    <div class="sofija">
+      <figure class="sofija__media" data-reveal>
+        <img src="img/sofija.jpg" alt="Bela torta sa zlatnom svećicom u obliku broja jedan" width="1200" height="1500" loading="lazy">
+      </figure>
+
+      <div class="sofija__text" data-reveal data-reveal-delay="1">
+        <h2 class="h2 h2--soft">Sofija puni<br>prvu godinu</h2>
+        <span class="ornament ornament--left" aria-hidden="true"></span>
+        <!-- TODO Marko: dodaj Sofijin pravi datum rođenja ako želiš. -->
+        <p>Istog dana kada kažemo „da", naša ćerka duva svoju prvu svećicu. Zato ovo nije
+           samo venčanje — to je i prvi rođendan naše male porodice.</p>
+        <p>Sofija Vas čeka sa tortom, i verovatno će zaspati pre kraja večeri. Do tada je
+           ona zvanično najvažniji gost.</p>
+        <p class="sofija__marker">08.11.2026. &nbsp;·&nbsp; prva svećica</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PROGRAM ============================ -->
+<section class="section section--teal" id="program">
+  <div class="wrap wrap--narrow">
+    <p class="label label--sticky" data-reveal>03 — Program dana</p>
+    <h2 class="h2 center" data-reveal>Nedelja, 8. novembar 2026.</h2>
+
+    <!-- Za dodatnu stavku: kopiraj jedan <li> i promeni vreme i tekst. -->
+    <ol class="time">
+      <li class="time__item" data-reveal>
+        <span class="time__hour">15:00</span>
+        <span class="time__what">Skup zvanica</span>
+        <span class="time__where" data-cfg="venue-short">Restoran DIVINE, Kraljevo</span>
+      </li>
+      <li class="time__item" data-reveal data-reveal-delay="1">
+        <span class="time__hour">16:00</span>
+        <span class="time__what">Građansko venčanje</span>
+        <span class="time__where">Na istom mestu</span>
+      </li>
+    </ol>
+
+    <p class="note center" data-reveal data-reveal-delay="2">
+      Detaljan raspored ostatka večeri objavićemo bliže datumu. Sve ostalo prepuštamo
+      muzici, hrani i Vama.
+    </p>
+
+    <div class="center" data-reveal data-reveal-delay="2">
+      <div class="cal" data-cal>
+        <button class="btn btn--outline" type="button" aria-expanded="false">Dodaj u kalendar</button>
+        <div class="cal__menu" hidden>
+          <a data-cal-google href="#" target="_blank" rel="noopener">Google kalendar</a>
+          <a data-cal-ics href="#" download="jelena-marko-sofija.ics">Apple / Outlook (.ics)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRAKA 2 ============================== -->
+<div class="band band--dark" data-parallax>
+  <div class="band__media"><img src="img/band-3.jpg" alt="" width="1500" height="830" loading="lazy"></div>
+  <p class="band__caption" data-reveal><span data-cfg="venue-name">Restoran DIVINE</span> &nbsp;·&nbsp; Kraljevo</p>
+</div>
+
+<!-- ============================= LOKACIJA ============================ -->
+<section class="section section--cream" id="lokacija">
+  <div class="wrap">
+    <p class="label label--sticky" data-reveal>04 — Lokacija</p>
+
+    <div class="loc">
+      <div class="loc__text" data-reveal>
+        <h2 class="h2" data-cfg="venue-name">Restoran DIVINE</h2>
+        <p class="loc__addr">
+          <span data-cfg="venue-address">Živojina Lazića Solunca, Grdica</span><br>
+          <span data-cfg="venue-city">36000 Kraljevo</span>
+        </p>
+        <p class="note">Besplatan parking je ispred objekta.</p>
+
+        <div class="loc__actions">
+          <a class="btn btn--solid" data-cfg-href="map-google" href="#" target="_blank" rel="noopener">Navigacija</a>
+          <button class="btn btn--text" type="button" data-copy-address>Kopiraj adresu</button>
+        </div>
+      </div>
+
+      <div class="loc__map" data-reveal data-reveal-delay="1">
+        <!-- Mapa se ubacuje iz js/main.js kada sekcija dođe blizu ekrana. -->
+        <div class="loc__map-holder" data-map>
+          <p class="note">Mapa se učitava…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SMEŠTAJ ============================ -->
+<section class="section section--teal" id="smestaj">
+  <div class="wrap">
+    <p class="label label--sticky" data-reveal>05 — Smeštaj</p>
+    <h2 class="h2 center" data-reveal>Gde prenoćiti u Kraljevu</h2>
+    <p class="note center" data-reveal>
+      Za goste koji dolaze iz drugih gradova — nekoliko predloga. Preporučujemo da
+      rezervišete ranije.
+    </p>
+    <div class="cards" id="hotels"><!-- puni se iz js/config.js --></div>
+  </div>
+</section>
+
+<!-- ============================== PITANJA ============================ -->
+<section class="section section--cream" id="pitanja">
+  <div class="wrap wrap--narrow">
+    <p class="label label--sticky" data-reveal>06 — Česta pitanja</p>
+    <h2 class="h2 center" data-reveal>Sve što bi moglo da Vas zanima</h2>
+
+    <div class="faq" data-reveal>
+      <details class="faq__item">
+        <summary>Do kada treba da potvrdim dolazak?</summary>
+        <div class="faq__body"><p>Do <strong data-cfg="deadline">20.10.2026.</strong> Najlakše je preko forme na
+          ovoj strani, ali možete nas i pozvati — brojevi su na dnu.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Mogu li da dovedem decu?</summary>
+        <div class="faq__body"><p>Naravno. Sofija bi se najviše obradovala društvu. Kada prijavljujete
+          dolazak, u broj gostiju uračunajte i decu.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Da li ima parkinga?</summary>
+        <div class="faq__body"><p>Ima — besplatan parking je ispred restorana.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Šta da obučem?</summary>
+        <div class="faq__body"><p>Svečano, ali udobno. Novembar u Kraljevu ume da bude hladan, a mi
+          planiramo da se igra do jutra.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Dolazim sa pratnjom — kako to da prijavim?</summary>
+        <div class="faq__body"><p>U formi izaberite ukupan broj gostiju koje prijavljujete. Jedna
+          potvrda može da pokrije celu porodicu.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Kome da se obratim ako nešto nije jasno?</summary>
+        <div class="faq__body"><p>Pozovite nas, tu smo: <span data-cfg="contacts-inline">Jelena i Marko</span>.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRAKA 3 ============================== -->
+<div class="band band--dark" data-parallax>
+  <div class="band__media"><img src="img/band-2.jpg" alt="" width="1500" height="830" loading="lazy"></div>
+  <p class="band__quote" data-reveal>Sve što nam treba<br>je da budete tu.</p>
+</div>
+
+<!-- =============================== RSVP ============================== -->
+<section class="section section--teal" id="rsvp">
+  <div class="wrap wrap--narrow">
+    <p class="label label--sticky" data-reveal>07 — Potvrda dolaska</p>
+    <h2 class="h2 center" data-reveal>Da li nam se pridružujete?</h2>
+    <p class="note center" data-reveal>
+      Molimo Vas da svoj dolazak potvrdite do <strong data-cfg="deadline">20.10.2026.</strong>
+    </p>
+
+    <div class="rsvp" data-reveal data-reveal-delay="1">
+      <p class="rsvp__already" id="rsvpAlready" hidden>
+        Već ste potvrdili dolazak — hvala Vam!
+        <button type="button" class="btn btn--text" id="rsvpAgain">Prijavi ponovo</button>
+      </p>
+
+      <form class="form" id="rsvpForm" novalidate>
+        <div class="field">
+          <label for="ime">Ime i prezime</label>
+          <input id="ime" name="ime" type="text" autocomplete="name" required
+                 placeholder="npr. Petar Petrović">
+          <p class="field__err" data-err="ime"></p>
+        </div>
+
+        <fieldset class="field">
+          <legend>Dolazite li?</legend>
+          <div class="pills">
+            <label class="pill">
+              <input type="radio" name="dolazak" value="Dolazim" checked>
+              <span>Dolazim</span>
+            </label>
+            <label class="pill">
+              <input type="radio" name="dolazak" value="Ne mogu">
+              <span>Ne mogu, nažalost</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="field" id="gostiField">
+          <label for="gosti">Broj gostiju</label>
+          <select id="gosti" name="gosti">
+            <option value="1">1 — samo ja</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6 i više</option>
+          </select>
+          <p class="note">Uračunajte i decu.</p>
+        </div>
+
+        <!-- zamka za botove: pravi ljudi ovo ne vide -->
+        <div class="hp" aria-hidden="true">
+          <label for="website">Sajt</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button class="btn btn--solid btn--block" type="submit" id="rsvpSubmit">
+          <span class="btn__label">Pošalji potvrdu</span>
+          <span class="btn__spin" aria-hidden="true"></span>
+        </button>
+
+        <p class="form__status" id="rsvpStatus" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="rsvp__contact">
+        <p class="note">Ako Vam je lakše telefonom — pozovite nas.</p>
+        <div class="rsvp__buttons" id="contactButtons"><!-- puni se iz js/config.js --></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================== FOOTER ============================= -->
+<footer class="foot">
+  <svg class="foot__mark" viewBox="0 0 200 122" aria-hidden="true">
+    <line class="mono__thread" x1="100" y1="0" x2="100" y2="20"/>
+      <text class="mono__s" x="54.59" y="92">S</text>
+      <text class="mono__j" x="24.34" y="92">J</text>
+      <text class="mono__m" x="102.03" y="92">M</text>
+  </svg>
+  <p class="foot__names">Jelena, Marko i Sofija</p>
+  <p class="foot__meta">08.11.2026. &nbsp;·&nbsp; <span data-cfg="venue-short">Restoran DIVINE, Kraljevo</span></p>
+  <p class="foot__bye">Vidimo se 8. novembra.</p>
+</footer>
+
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

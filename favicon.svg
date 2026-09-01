@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#2F5D5B"/>
+  <!-- Iste proporcije kao monogram na sajtu, preračunato za generički serif:
+       J i M ista visina slova, S simetrično u procepu između njih. -->
+  <g font-family="Georgia,'Times New Roman',serif" font-weight="400">
+    <text x="16.4" y="43.71" font-size="34" fill="#8FA39B" opacity=".72">S</text>
+    <text x="5.83" y="43" font-size="32" fill="#FBF7EF">J</text>
+    <text x="29.8" y="43" font-size="32" fill="#FBF7EF">M</text>
+  </g>
+</svg>
