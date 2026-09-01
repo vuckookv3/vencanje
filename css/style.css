@@ -300,8 +300,16 @@ body.is-locked{overflow:hidden}
   padding:calc(var(--nav-h) + 2rem) var(--pad) 5rem;overflow:hidden;
 }
 .hero__media{position:absolute;inset:0;z-index:0}
-.hero__media img{width:100%;height:100%;object-fit:cover;object-position:60% 50%;
-  filter:saturate(.93)}
+/* object-position je izračunat, ne pogođen:
+   58% po vertikali je jedini opseg u kom cela porodica (glava i stopala)
+   ostaje u kadru i na 1920x1080, gde se vidi samo 675 od 900 redova.
+   52% po horizontali ih centrira na telefonu, gde se vidi ~35% širine.
+   Filter: jarko roze cvetovi i zelena trava se smiruju da se slože sa
+   tirkiz/krem paletom sajta.                                            */
+.hero__media img{
+  width:100%;height:100%;object-fit:cover;object-position:52% 58%;
+  filter:saturate(.68) contrast(1.06) brightness(1.02);
+}
 .hero__media::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(27,60,58,.62) 0%,rgba(27,60,58,.28) 45%,rgba(27,60,58,.72) 100%);
@@ -451,7 +459,7 @@ body.is-locked{overflow:hidden}
 /* -------------------------------- TRAKE --------------------------- */
 .band{
   position:relative;height:52vh;min-height:17rem;max-height:38rem;
-  overflow:hidden;display:grid;place-items:center;
+  overflow:hidden;display:grid;place-items:center;isolation:isolate;
   padding-inline:var(--pad);background:var(--teal-900);
 }
 .band__media{position:absolute;left:0;right:0;top:-14%;bottom:-14%;z-index:0}
@@ -459,6 +467,28 @@ body.is-locked{overflow:hidden}
 .band--dark::after{
   content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(15,38,37,.5),rgba(15,38,37,.35));
+}
+
+/* Traka sa fotografijom sale. Sala je svetla i hladnih tonova, pa je obična
+   providna tamna prevlaka čini mlečnom (diže crne, spušta bele tonove).
+   `mix-blend-mode:multiply` tamni bez podizanja crnih, tako da slika zadrži
+   kontrast; radijalni gradijent daje tamniju sredinu gde stoji natpis.      */
+.band--venue::after{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse at center,
+             rgba(12,33,32,.30) 0%,
+             rgba(12,33,32,.42) 70%,
+             rgba(12,33,32,.55) 100%);
+  mix-blend-mode:multiply;
+}
+.band--venue .band__media img{filter:saturate(.92) contrast(1.04)}
+
+/* Prevlaka je namerno laka da se sala vidi, pa natpis dobija svoju podlogu. */
+.band--venue .band__caption{
+  padding:.8rem 1.4rem;
+  background:rgba(10,28,27,.58);
+  border:1px solid rgba(244,237,225,.3);
+  text-shadow:0 1px 10px rgba(11,30,29,.5);
 }
 .band__quote,.band__caption{position:relative;z-index:2;text-align:center;color:var(--cream-lt)}
 .band__quote{
@@ -672,9 +702,16 @@ body.is-locked{overflow:hidden}
   color:var(--sage-dk);
 }
 .contact__num{font-family:var(--serif);font-size:1.15rem;letter-spacing:.02em}
-.contact__num a{display:inline-flex;align-items:center;min-height:44px}
-.contact__num a{text-decoration:none}
-.contact__num a:hover{text-decoration:underline;text-underline-offset:.2em}
+/* Broj je jedini način da se pozove (nema više dugmeta „Pozovi"), pa mora
+   da izgleda kao da se na njega može kliknuti — otud tanka podvlaka. */
+.contact__num a{
+  display:inline-flex;align-items:center;min-height:44px;
+  text-decoration:underline;text-decoration-thickness:1px;
+  text-decoration-color:var(--sage);text-underline-offset:.28em;
+}
+.contact__num a:hover,.contact__num a:focus-visible{
+  text-decoration-color:var(--teal);text-decoration-thickness:2px;
+}
 .contact__links{
   display:flex;justify-content:center;flex-wrap:wrap;gap:.15rem .9rem;margin-top:.5rem;
 }

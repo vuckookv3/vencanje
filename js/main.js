@@ -17,6 +17,10 @@
      1. Pomoćne funkcije
      --------------------------------------------------------------- */
   function telHref(num) { return 'tel:' + String(num).replace(/[^\d+]/g, ''); }
+  /* Namerno bez ?body= — prefil teksta se razlikuje na iOS-u i Androidu,
+     a pogrešan format ume da pokvari primaoca. Ovako se svuda otvara
+     nova poruka sa upisanim brojem.                                    */
+  function smsHref(num) { return 'sms:' + String(num).replace(/[^\d+]/g, ''); }
   function digits(num)  { return String(num).replace(/\D/g, ''); }
 
   function srDate(iso) {                       // 2026-10-20 -> 20.10.2026.
@@ -351,7 +355,7 @@
                '<p class="contact__name">' + c.name + '</p>' +
                '<p class="contact__num"><a href="' + telHref(c.phone) + '">' + c.phone + '</a></p>' +
                '<div class="contact__links">' +
-                 '<a href="' + telHref(c.phone) + '">Pozovi</a>' +
+                 '<a href="' + smsHref(c.phone) + '">SMS</a>' +
                  '<a href="viber://chat?number=%2B' + d + '">Viber</a>' +
                  '<a href="https://wa.me/' + d + '" target="_blank" rel="noopener">WhatsApp</a>' +
                '</div>' +
