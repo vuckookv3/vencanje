@@ -310,6 +310,14 @@ body.is-locked{overflow:hidden}
   width:100%;height:100%;object-fit:cover;object-position:52% 58%;
   filter:saturate(.68) contrast(1.06) brightness(1.02);
 }
+/* Verzija na /real koristi placeholder fotografije. Hero je tamo druga slika
+   (par u jesenjoj šumi), pa mu trebaju svoj kadar i blaži filter — kadar 52%/58%
+   i saturate(.68) su izračunati za porodičnu fotografiju i ovde ne odgovaraju. */
+body.v-stock .hero__media img{
+  object-position:60% 50%;
+  filter:saturate(.93);
+}
+
 .hero__media::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(27,60,58,.62) 0%,rgba(27,60,58,.28) 45%,rgba(27,60,58,.72) 100%);

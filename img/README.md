@@ -1,6 +1,6 @@
 # Slike
 
-Prave fotografije: `hero.jpg`, `sofija.jpg` i `band-3.jpg` (sala). Ostale su **privremene**
+Prave fotografije: `hero.jpg`, `story.jpg`, `sofija.jpg` i `band-3.jpg` (sala). Ostale su **privremene**
 (Pexels, besplatna licenca) — zameni ih svojim: zadrži ista imena fajlova i
 ništa u kodu ne treba menjati.
 
@@ -10,7 +10,7 @@ sam kadrira. Bitno je da glavni motiv nije skroz na ivici.
 | Fajl | Gde se vidi | Preporučena veličina | Šta treba da bude na slici |
 |---|---|---|---|
 | `hero.jpg` | Prva slika, cela širina ekrana | **prava fotografija** (1200×900, 4:3) | Jelena, Marko i Sofija ispod rascvetalog drveta. Kadar i `object-position: 52% 58%` su izračunati tako da porodica ostane cela u kadru i desno od krem kartice — ako menjaš sliku, proveri oba. |
-| `story.jpg` | Sekcija „Naša priča" | 1000–1200 px široko (portret) | Vas dvoje, topliji kadar. Seče se na 4:5. |
+| `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (960×1200, 4:5) | Kadrirano iz pejzažne slike — puna visina, odrezano levo/desno da utičnice ostanu van kadra. |
 | `sofija.jpg` | Sekcija „Sofija" | **prava fotografija** (1000×1250, 4:5) | Sofija. Seče se u oblik kapije (zaobljeno gore) — ostavi malo prostora iznad glave da je luk ne „odseče". |
 | `band-1.jpg` | Traka posle „Naše priče" | 1500–1800 px široko (pejzaž) | Detalj — cveće, prstenje, dekoracija. |
 | `band-2.jpg` | Traka pre RSVP forme | 1500–1800 px široko (pejzaž) | Tamniji, večernji kadar (preko njega ide citat). |
@@ -34,3 +34,12 @@ Ako promeniš proporcije slike, u `index.html` ispravi i `width`/`height`
 na odgovarajućem `<img>` tagu (sprečava „poskakivanje" strane pri učitavanju).
 
 Trenutno stanje: sve slike zajedno ~1.1 MB (`du -sh .`).
+
+
+---
+
+## `img-stock/`
+
+Pored ovog foldera postoji i `img-stock/` sa originalnim placeholder slikama
+(Pexels). Njih koristi verzija sajta na `/real`. Ako zameniš sliku ovde u
+`img/`, `img-stock/` ostaje nepromenjen — to je i cela ideja.
