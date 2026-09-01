@@ -19,7 +19,11 @@ sam kadrira. Bitno je da glavni motiv nije skroz na ivici.
 
 ## Pre nego što ubaciš svoje slike
 
-Smanji ih — telefoni troše mobilni internet. Cilj: **do 400 KB po slici**.
+Smanji ih — telefoni troše mobilni internet. Cilj: **do 300 KB po slici**.
+
+Ovo je sada važnije nego ranije: sve slike se učitavaju odmah sa stranom (da ne
+„uskaču" pri skrolovanju), pa se njihova veličina sabira na prvom otvaranju.
+Trenutno je to ~1,3 MB ukupno.
 Na Macu, iz ovog foldera:
 
 ```bash

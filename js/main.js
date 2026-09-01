@@ -277,25 +277,12 @@
       '&details=' + encodeURIComponent(details) +
       '&location=' + encodeURIComponent(where);
 
-    function esc(t) { return String(t).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n'); }
-    var ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//JMS//Vencanje 2026//SR',
-      'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      'UID:jms-08112026@vencanje',
-      'DTSTAMP:' + stamp(new Date()),
-      'DTSTART:' + stamp(START),
-      'DTEND:'   + stamp(END),
-      'SUMMARY:' + esc(title),
-      'DESCRIPTION:' + esc(details),
-      'LOCATION:' + esc(where),
-      'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
-
-    var icsUrl = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-
+    /* .ics se NE generiše u JS-u. Ranije je bio blob + download atribut, ali
+       iOS to samo snimi u Fajlove i nikad ne ponudi Kalendar. Sada je to
+       pravi fajl (vencanje.ics) koji server šalje kao text/calendar — tada
+       Safari na iPhone-u odmah otvori sheet za dodavanje u kalendar.
+       Putanja stoji u HTML-u, pa je ovde ne treba postavljati.            */
     $$('[data-cal-google]').forEach(function (a) { a.href = gcal; });
-    $$('[data-cal-ics]').forEach(function (a) { a.href = icsUrl; });
 
     // padajući meni
     $$('[data-cal]').forEach(function (wrap) {

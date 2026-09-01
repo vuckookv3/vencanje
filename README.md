@@ -5,6 +5,7 @@ Jednostrani sajt za venčanje i Sofijin prvi rođendan.
 
 ```
 index.html        sav tekst (ovde menjaj priču, FAQ, poruke)
+vencanje.ics      fajl za Apple/Outlook kalendar (statičan — vidi sekciju 5)
 real/index.html   ista strana, placeholder slike (vidi sekciju 6)
 css/style.css     dizajn
 js/config.js      datum, adresa, telefoni, hoteli, RSVP link  ← ovde menjaj podatke
@@ -143,11 +144,19 @@ svojim, `/real` verovatno više nije potrebna — obriši folder `real/`,
 
 - **Odbrojavanje** čita `startsAt` iz configa. Kad datum prođe, samo se
   zameni porukom — ne prikazuje negativne brojeve.
-- **„Dodaj u kalendar"** nudi Google kalendar i `.ics` fajl (Apple/Outlook).
-  `.ics` se pravi u browseru, ništa se ne šalje nikuda.
-- **Mapa** se ne učitava odmah sa stranom (~800 KB), nego kada gost skroluje
-  blizu sekcije „Lokacija". Prvo učitavanje strane time ostaje lako, a mapa je
-  već tu kada se do nje stigne.
+- **„Dodaj u kalendar"** nudi dve opcije: Google kalendar (link) i `vencanje.ics`
+  (Apple/Outlook). `.ics` je **statičan fajl u korenu sajta**, a ne generisan u
+  browseru — namerno: server ga šalje kao `text/calendar`, pa Safari na iPhone-u
+  odmah otvori „Dodaj u kalendar" umesto da ga snimi u Fajlove.
+  **Ako menjaš datum ili adresu u `config.js`, izmeni i `vencanje.ics`** — to je
+  jedino mesto koje se ne ažurira samo. U njemu su `DTSTART`/`DTEND` u UTC
+  vremenu (15:00 kod nas = `20261108T140000Z`).
+- **Sve fotografije se učitavaju odmah** sa stranom (nema `loading="lazy"`), pa
+  ne „uskaču" dok gost skroluje. Cena: ~1,3 MB slika na prvo otvaranje. Hero
+  ima `fetchpriority="high"` i `preload`, pa se on i dalje prvi pojavi.
+  Zato je važno da slike u `img/` ostanu male — vidi `img/README.md`.
+- **Mapa** je jedini izuzetak: ne učitava se odmah (~800 KB) nego kada gost
+  skroluje blizu sekcije „Lokacija".
 - **„Već ste potvrdili"** se pamti u `localStorage` tog telefona. Nije zaključano:
   postoji dugme „Prijavi ponovo".
 - **Animacije** se same isključuju ako gost u telefonu ima uključeno
