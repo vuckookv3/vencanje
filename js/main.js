@@ -277,45 +277,10 @@
       '&details=' + encodeURIComponent(details) +
       '&location=' + encodeURIComponent(where);
 
-    /* .ics se NE generiše u JS-u. Ranije je bio blob + download atribut, ali
-       iOS to samo snimi u Fajlove i nikad ne ponudi Kalendar. Sada je to
-       pravi fajl (vencanje.ics) koji server šalje kao text/calendar — tada
-       Safari na iPhone-u odmah otvori sheet za dodavanje u kalendar.
-       Putanja stoji u HTML-u, pa je ovde ne treba postavljati.            */
+    /* Podržan je samo Google kalendar — bez padajućeg menija, dugme vodi
+       direktno na Google. .ics i webcal opcije su uklonjene: na iPhone-u su
+       završavale kao fajl bez imena ili nisu radile uopšte.              */
     $$('[data-cal-google]').forEach(function (a) { a.href = gcal; });
-
-    /* Apple: webcal:// je isti fajl, samo druga shema. iOS je vezuje za
-       Kalendar, pa Safari uopšte ne ulazi u „snimi fajl" logiku (zbog koje je
-       stizao fajl bez imena, „Unknown"). Adresu izvlačimo iz .ics linka, pa
-       radi i na /real i na bilo kom domenu — bez hardkodovanja.            */
-    var icsLink = $('[data-cal-ics]');
-    if (icsLink) {
-      var webcal = icsLink.href.replace(/^https?:/, 'webcal:');
-      $$('[data-cal-apple]').forEach(function (a) { a.href = webcal; });
-    }
-
-    // padajući meni
-    $$('[data-cal]').forEach(function (wrap) {
-      var btn = wrap.querySelector('button'), menu = wrap.querySelector('.cal__menu');
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var open = !menu.hidden;
-        closeAll();
-        if (open) return;
-        menu.hidden = false;
-        btn.setAttribute('aria-expanded', 'true');
-      });
-      menu.addEventListener('click', function () { setTimeout(closeAll, 60); });
-    });
-
-    function closeAll() {
-      $$('[data-cal]').forEach(function (w) {
-        w.querySelector('.cal__menu').hidden = true;
-        w.querySelector('button').setAttribute('aria-expanded', 'false');
-      });
-    }
-    document.addEventListener('click', closeAll);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
   }
 
   /* ---------------------------------------------------------------

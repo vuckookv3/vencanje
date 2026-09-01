@@ -156,7 +156,7 @@ a{color:inherit}
   --btn-flip-fg:var(--teal-900);
 }
 /* ...a krem kartica unutar tirkizne sekcije se vraća na tamno dugme. */
-.rsvp,.hero__card,.cal__menu{
+.rsvp,.hero__card{
   --btn-flip-bg:var(--ink);
   --btn-flip-fg:var(--cream-lt);
 }
@@ -368,7 +368,6 @@ body.v-stock .hero__media img{
   padding-top:1.6rem;border-top:1px solid rgba(143,163,155,.35);
 }
 .hero__actions .btn{width:100%}
-.hero__actions .cal{width:100%}
 
 .hero__scroll{
   position:absolute;left:50%;bottom:1.5rem;z-index:1;
@@ -383,22 +382,6 @@ body.v-stock .hero__media img{
   40%{transform:scaleY(1);opacity:.75}
   100%{transform:scaleY(1) translateY(2.25rem);opacity:0}}
 
-/* dugme „Dodaj u kalendar" + meni */
-.cal{position:relative;display:inline-flex;flex-direction:column}
-.cal>.btn{width:100%}
-.cal__menu{
-  position:absolute;left:0;right:0;top:calc(100% + .4rem);z-index:5;
-  background:var(--cream-lt);color:var(--ink);
-  border:1px solid rgba(27,42,41,.15);
-  box-shadow:0 18px 40px -22px rgba(11,30,29,.5);
-  display:grid;
-}
-.cal__menu a{
-  padding:.9rem 1.15rem;text-decoration:none;font-size:.8rem;
-  letter-spacing:.06em;text-align:left;
-}
-.cal__menu a+a{border-top:1px solid rgba(27,42,41,.12)}
-.cal__menu a:hover{background:var(--cream)}
 
 /* -------------------------------- POZIV --------------------------- */
 .poziv{position:relative;padding-block:clamp(3.5rem,12vw,6rem);overflow:hidden}
@@ -547,7 +530,7 @@ body.v-stock .hero__media img{
 .time__what{font-size:.82rem;text-transform:uppercase;letter-spacing:.16em}
 .time__where{font-size:.85rem;color:var(--sage)}
 .section--teal .note.center{margin-top:2.25rem}
-.section--teal .center>.cal{margin-top:1.75rem}
+.section--teal .center>.btn{margin-top:1.75rem}
 
 /* ------------------------------- LOKACIJA ------------------------- */
 .loc{display:grid;gap:2.25rem}
@@ -769,7 +752,6 @@ figure[data-reveal].is-in img{clip-path:inset(0 0 0 0)}
   .hero{padding-inline:clamp(2rem,6vw,5rem)}
   .hero__card{max-width:29rem}
   .hero__names{font-size:clamp(1.6rem,3vw,2.15rem)}
-  .cal__menu{min-width:14rem;left:0;right:auto}
 
   .split{grid-template-columns:1.02fr .98fr;gap:clamp(2.5rem,6vw,5rem);align-items:center}
   .split__media{margin-top:-2.5rem}

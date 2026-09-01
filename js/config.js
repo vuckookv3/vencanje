@@ -18,9 +18,8 @@ window.CONFIG = {
      Skup zvanica: 8. novembar 2026. u 15:00, srpsko vreme (CET, +01:00).
      Format mora ostati ovakav (ISO 8601 sa vremenskom zonom).
 
-     PAŽNJA: ako menjaš datum/vreme, izmeni i fajl `vencanje.ics` u korenu
-     (DTSTART/DTEND su tamo u UTC vremenu). Odavde se povlači samo Google
-     kalendar link i odbrojavanje.                                      */
+     Odavde se povlače odbrojavanje i „Dodaj u kalendar" link, pa je ovo
+     jedino mesto gde se datum menja.                                   */
   startsAt: '2026-11-08T15:00:00+01:00',
   endsAt:   '2026-11-09T00:00:00+01:00',   // procena kraja, koristi se samo za kalendar
   ceremonyAt: '2026-11-08T16:00:00+01:00', // građansko venčanje

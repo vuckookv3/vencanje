@@ -5,7 +5,6 @@ Jednostrani sajt za venčanje i Sofijin prvi rođendan.
 
 ```
 index.html        sav tekst (ovde menjaj priču, FAQ, poruke)
-vencanje.ics      fajl za Apple/Outlook kalendar (statičan — vidi sekciju 5)
 real/index.html   ista strana, placeholder slike (vidi sekciju 6)
 css/style.css     dizajn
 js/config.js      datum, adresa, telefoni, hoteli, RSVP link  ← ovde menjaj podatke
@@ -144,13 +143,13 @@ svojim, `/real` verovatno više nije potrebna — obriši folder `real/`,
 
 - **Odbrojavanje** čita `startsAt` iz configa. Kad datum prođe, samo se
   zameni porukom — ne prikazuje negativne brojeve.
-- **„Dodaj u kalendar"** nudi dve opcije: Google kalendar (link) i `vencanje.ics`
-  (Apple/Outlook). `.ics` je **statičan fajl u korenu sajta**, a ne generisan u
-  browseru — namerno: server ga šalje kao `text/calendar`, pa Safari na iPhone-u
-  odmah otvori „Dodaj u kalendar" umesto da ga snimi u Fajlove.
-  **Ako menjaš datum ili adresu u `config.js`, izmeni i `vencanje.ics`** — to je
-  jedino mesto koje se ne ažurira samo. U njemu su `DTSTART`/`DTEND` u UTC
-  vremenu (15:00 kod nas = `20261108T140000Z`).
+- **„Dodaj u kalendar"** vodi direktno na Google kalendar, bez menija. Link se
+  pravi iz `config.js` (datum, mesto), pa se datum menja samo na jednom mestu.
+  Isprobane su i `.ics` i `webcal://` opcije za Apple/Outlook — na iPhone-u su
+  završavale kao fajl bez imena ili nisu radile — pa su izbačene.
+  *Napomena:* da bi gost sačuvao događaj, mora biti prijavljen na Google račun.
+  Ako se pokaže da je to problem za goste sa iPhone-a, `.ics` opcija se može
+  vratiti.
 - **Sve fotografije se učitavaju odmah** sa stranom (nema `loading="lazy"`), pa
   ne „uskaču" dok gost skroluje. Cena: ~1,3 MB slika na prvo otvaranje. Hero
   ima `fetchpriority="high"` i `preload`, pa se on i dalje prvi pojavi.
