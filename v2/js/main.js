@@ -691,11 +691,13 @@
       if (key && key.parentNode) key.parentNode.removeChild(key);
     }
 
-    /* Preskoči kad koverta nema smisla: gost je došao na #rsvp iz poruke
-       ili sa obeleživača, pa mu ne treba koverta da bi sleteo na sredinu
-       strane. `prefers-reduced-motion` se namerno NE gleda — animacija
-       se u ovoj verziji pušta svima.                                    */
-    if (!env || !key || location.hash) {
+    /* Jedini razlog da se koverta preskoči jeste da je nema u dokumentu.
+       Hash se NAMERNO ne gleda: koverta je početak svakog otvaranja sajta,
+       pa i kada gost dođe na /#rsvp iz poruke ili sa obeleživača. Hash i
+       dalje radi svoj posao unutar sajta — meni i ostale veze skroluju
+       kao i pre. `prefers-reduced-motion` se takođe namerno NE gleda —
+       animacija se u ovoj verziji pušta svima.                          */
+    if (!env || !key) {
       drop();
       done();
       return;
@@ -722,9 +724,28 @@
     /* Posle osvežavanja browser vraća gosta na staru poziciju skrola —
        bez ovoga bi se koverta otvorila i otkrila sredinu strane.        */
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
+
+    /* Hash mora iz adrese, ne samo iz računice gore: `scrollTo(0, 0)` drži
+       samo za taj trenutak, a browser ume da skoči na odeljak i kasnije —
+       kad se slike doučitaju i raspored slegne. Tada bi se koverta digla
+       i otkrila sredinu strane. Brisanje ide preko `replaceState`, pa
+       gostu ne ostaje suvišan korak u istoriji.                          */
+    if (location.hash && history.replaceState) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
 
     var opened = false, exiting = false, finished = false;
+
+    window.scrollTo(0, 0);
+
+    /* Jedan `scrollTo` nije dovoljan: browser ume da vrati staru poziciju i
+       POSLE ovog poziva, kad se slike doučitaju i strana dobije punu visinu.
+       Zato se vrh drži i na `load`, i još jednom pred samo pretapanje — da
+       gost koji dodirne kovertu odmah, dok se strana još slaže, ne sleti na
+       njenu sredinu.                                                       */
+    window.addEventListener('load', function () {
+      if (!exiting) window.scrollTo(0, 0);
+    });
 
     /* Pocetak pretapanja. Skidanje `is-envelope` ovde je poenta: uvodni
        ekran ispod krece da sleti sa 1,02 na 1 u istih 1,5 s koliko
@@ -734,6 +755,7 @@
     function exit() {
       if (exiting) return;                     // timeupdate, ended i mreža se preklapaju
       exiting = true;
+      window.scrollTo(0, 0);                   // poslednja provera pred otkrivanje
       env.classList.add('is-exiting');
       document.body.classList.remove('is-envelope');
       done();

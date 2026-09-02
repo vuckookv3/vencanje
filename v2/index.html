@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Mora ovde, pre svega ostalog: posle osvezavanja browser vraca gosta na
+     staru poziciju skrola cim strana dobije punu visinu, a to ume i posle
+     DOMContentLoaded — kad se slike doucitaju. js/main.js se ucitava tek na
+     kraju <body>, prekasno da to stigne da spreci; koverta bi tada pokrivala
+     sredinu strane i gost bi po njenom odlasku sleteo tamo umesto na pocetak.
+     Ovako se restauracija nikad i ne zakaze. Kad koverta ode, initEnvelope
+     vraca podrazumevano 'auto'. -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
 <meta name="theme-color" content="#3F4234">
