@@ -38,12 +38,3 @@ Ako promeniš proporcije slike, u `index.html` ispravi i `width`/`height`
 na odgovarajućem `<img>` tagu (sprečava „poskakivanje" strane pri učitavanju).
 
 Trenutno stanje: sve slike zajedno ~1.1 MB (`du -sh .`).
-
-
----
-
-## `img-stock/`
-
-Pored ovog foldera postoji i `img-stock/` sa originalnim placeholder slikama
-(Pexels). Njih koristi verzija sajta na `/real`. Ako zameniš sliku ovde u
-`img/`, `img-stock/` ostaje nepromenjen — to je i cela ideja.

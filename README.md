@@ -5,12 +5,10 @@ Jednostrani sajt za venčanje i Sofijin prvi rođendan.
 
 ```
 index.html        sav tekst (ovde menjaj priču, FAQ, poruke)
-real/index.html   ista strana, placeholder slike (vidi sekciju 6)
 css/style.css     dizajn
 js/config.js      datum, adresa, telefoni, hoteli, RSVP link  ← ovde menjaj podatke
 js/main.js        logika (odbrojavanje, kalendar, forma, animacije)
-img/              prave fotografije (vidi img/README.md)
-img-stock/        placeholder fotografije sa Pexels-a, za /real
+img/              fotografije (vidi img/README.md)
 apps-script/      kod za Google tabelu sa prijavama
 ```
 
@@ -93,49 +91,6 @@ echo "vencanje.example.rs" > CNAME
 
 Pa kod registrara napravi `CNAME` zapis ka `<korisnik>.github.io`
 (ili `A` zapise na GitHub IP adrese), i u **Settings → Pages** upiši domen.
-
----
-
-## 6. Dve verzije sajta: `/` i `/real`
-
-Sajt postoji u dve verzije. **Tekst, dizajn, forma i podaci su im identični** —
-razlikuju se samo fotografije:
-
-| adresa | fotografije | folder |
-|---|---|---|
-| `/` | prave — vi, Sofija, sala | `img/` |
-| `/real` | placeholder sa Pexels-a | `img-stock/` |
-
-Sve ostalo — `css/`, `js/`, `config.js`, `favicon.svg` — dele obe verzije, pa se
-menja na jednom mestu.
-
-### Ako menjaš tekst, menjaj ga u OBA fajla
-
-`index.html` i `real/index.html` su dva nezavisna fajla. Promena teksta, sekcije
-ili FAQ-a u jednom **ne prelazi sama** u drugi. Najlakše: promeni `index.html`,
-pa isti taj deo prekopiraj u `real/index.html`.
-
-Razlikuju se **samo** u ovih pet stvari (ništa drugo ne treba menjati):
-
-| | `index.html` | `real/index.html` |
-|---|---|---|
-| putanje do css/js/favicon | `css/style.css` | `../css/style.css` |
-| folder sa slikama | `img/…` | `../img-stock/…` |
-| `<body>` | `<body>` | `<body class="v-stock">` |
-| traka sa salom | `class="band band--venue"` | `class="band band--dark"` |
-| `alt` i `width`/`height` na 4 slike | opis pravih slika | opis placeholdera |
-
-Klasa `v-stock` na `<body>`-ju je bitna: zbog nje hero na `/real` dobija svoj
-kadar i filter (u `css/style.css` traži `v-stock`). Bez nje bi placeholder hero
-bio kadriran kao porodična fotografija.
-
-Ako ti se dupliranje ikad smori: kada zameniš i preostale dve placeholder slike
-svojim, `/real` verovatno više nije potrebna — obriši folder `real/`,
-`img-stock/` i `v-stock` pravilo iz CSS-a.
-
-> **Pre nego što pošalješ link gostima:** `/` je verzija sa privatnim
-> fotografijama. Ako gosti treba da vide onu drugu, ili zameni slike u `img/`,
-> ili mi reci pa da obrnemo — da `/` bude pristojna verzija, a šala na drugoj adresi.
 
 ---
 
