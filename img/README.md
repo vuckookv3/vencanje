@@ -10,10 +10,10 @@ sam kadrira. Bitno je da glavni motiv nije skroz na ivici.
 | Fajl | Gde se vidi | Preporučena veličina | Šta treba da bude na slici |
 |---|---|---|---|
 | `hero.jpg` | Prva slika, cela širina ekrana | **prava fotografija** (1200×900, 4:3) | Jelena, Marko i Sofija ispod rascvetalog drveta. Kadar i `object-position: 52% 58%` su izračunati tako da porodica ostane cela u kadru i desno od svetle kartice — ako menjaš sliku, proveri oba. |
-| `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (960×1200, 4:5) | Kadrirano iz pejzažne slike — puna visina, odrezano levo/desno da utičnice ostanu van kadra. |
+| `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (856×1070, 4:5) | Jelena i Marko na brodu. Izrezano iz Instagram screenshot-a — bez statusne trake, imena profila, značke „1/8", lajkova i komentara. |
 | `sofija.jpg` | Sekcija „Sofija" | **prava fotografija** (860×1075, 4:5) | Sofija. Seče se u oblik kapije (zaobljeno gore) — ostavi prostor iznad glave I centriraj lice po horizontali, inače luk odseče kosu sa strane. |
 | `band-2.jpg` | Traka pre RSVP forme | 1500–1800 px široko (pejzaž) | Tamniji, večernji kadar (preko njega ide citat). |
-| `band-3.jpg` | Traka pre „Lokacije" | **prava fotografija sale** (800×800) | Svečana sala restorana DIVINE. Ako nađeš verziju u većoj rezoluciji (1600 px+), zameni je — na velikim ekranima je trenutna malo mekša. |
+| `band-3.jpg` | Traka pre „Lokacije" | **prava fotografija** (1537×1023) | Svečana sala restorana DIVINE, spremna za svadbu. |
 | `texture.jpg` | Podloga sekcije „Poziv" i mape | bilo koja | Tekstura papira. Ne menjaj bez potrebe. |
 
 ## Pre nego što ubaciš svoje slike
