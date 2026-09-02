@@ -14,7 +14,7 @@
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
-<meta name="theme-color" content="#3F4234">
+<meta name="theme-color" content="#2F5D5B">
 <!-- Chrome / Google Translate: ne predlaži prevod ove strane. Sajt je namerno
      samo na srpskom, pa gostima ne treba da iskače traka „Prevedi stranu?". -->
 <meta name="google" content="notranslate">
@@ -25,13 +25,51 @@
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sr_RS">
+<meta property="og:url" content="https://vencanje.wolfit.rs/">
 <meta property="og:title" content="Jelena, Marko i Sofija · 08.11.2026.">
 <meta property="og:description" content="Pozivamo Vas na naše venčanje i Sofijin prvi rođendan — 8. novembra 2026. u Kraljevu.">
-<meta property="og:image" content="img/hero.jpg">
+
+<!-- Slika u pretpregledu (Viber, WhatsApp, Messenger…) je MONOGRAM, ne
+     hero fotografija: pozivnica je privatna, pa u tudjem cetu treba da
+     stoji nas znak, a ne slika sa nama.
+
+     Tri stvari ovde nisu kozmetika:
+       1. Adresa MORA da bude puna (https://…). Relativna putanja radi u
+          browseru, ali je citaci poruka cesto ne razrese i pretpregled
+          ostane bez slike.
+       2. Mora .png/.jpg — Viber i WhatsApp ne umeju SVG, pa favicon.svg
+          ovde ne moze da posluzi.
+       3. Sirina/visina pomazu da se odmah nacrta veliki pretpregled, bez
+          cekanja da se slika preuzme.
+
+     Sama slika se pravi iz istog monograma kao na sajtu (Cormorant
+     Garamond 300, J i M u --shell, S u --sage preko --ink podloge).
+     PAZI: citaci poruka kesiraju pretpregled po adresi. Ako se slika
+     menja, promeni i ime fajla — inace se starima i dalje prikazuje
+     stara.                                                             -->
+<meta property="og:image" content="https://vencanje.wolfit.rs/img/share-jsm.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Monogram JSM i datum 08.11.2026.">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://vencanje.wolfit.rs/img/share-jsm.png">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon.svg">
+<!-- Ikonica za „Dodaj na pocetni ekran" MORA da bude .png: iOS ne ume SVG
+     ovde, pa je gost koji sacuva pozivnicu na pocetni ekran dosad dobijao
+     sivu slicicu strane umesto znaka. 180x180 je mera za danasnje iPhone-e,
+     ostale iOS sam smanjuje. Stoji u korenu i pod podrazumevanim imenom,
+     pa je iOS nalazi i kada ovog reda nema.
+
+     Slika je bez providnosti i bez zaobljenih ivica — iOS providnost slozi
+     na crno, a ivice sam zaobli. Boje su iste kao favicon.svg (podloga
+     #2F5D5B, J i M #FBF7EF, S #8FA39B), samo je slovo iz Cormorant
+     Garamond-a kao na sajtu, jer .png ne zavisi od ucitanog fonta.     -->
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<!-- Bez ovoga bi ispod ikonice stajao ceo <title> („Jelena, Marko i
+     Sofija · 08.11.2026."), a iOS ga skrati na par slova. -->
+<meta name="apple-mobile-web-app-title" content="Venčanje">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -224,13 +262,13 @@
   <div class="wrap">
     <p class="label label--sticky" data-reveal>02 — Sofija</p>
 
+    <!-- Redosled je isti kao u sekciji 01: TEKST pa slika. Na telefonu se
+         tako obe sekcije otvaraju naslovom, a ne fotografijom. Na sirokom
+         ekranu slika se vraca levo (v. `.sofija__media` u @media bloku u
+         style.css), pa raspored i dalje ide naizmenicno sa sekcijom 01. -->
     <div class="sofija">
-      <figure class="sofija__media" data-reveal>
-        <img src="img/sofija.jpg" alt="Nasmejana Sofija" width="860" height="1075">
-      </figure>
-
-      <div class="sofija__text" data-reveal data-reveal-delay="1">
-        <h2 class="h2 h2--soft">Sofija puni<br>prvu godinu</h2>
+      <div class="sofija__text" data-reveal>
+        <h2 class="h2 h2--soft">Sofija puni prvu godinu</h2>
         <span class="ornament ornament--left" aria-hidden="true"></span>
         <!-- TODO Marko: dodaj Sofijin pravi datum rođenja ako želiš. -->
         <p>Istog dana kada kažemo „da", naša ćerka duva svoju prvu svećicu. Zato ovo nije
@@ -239,6 +277,10 @@
            ona zvanično najvažniji gost.</p>
         <p class="sofija__marker">08.11.2026. &nbsp;·&nbsp; prva svećica</p>
       </div>
+
+      <figure class="sofija__media" data-reveal data-reveal-delay="1">
+        <img src="img/sofija.jpg" alt="Nasmejana Sofija" width="860" height="1075">
+      </figure>
     </div>
   </div>
 </section>
