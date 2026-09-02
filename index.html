@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Mora ovde, pre svega ostalog: posle osvezavanja browser vraca gosta na
+     staru poziciju skrola cim strana dobije punu visinu, a to ume i posle
+     DOMContentLoaded — kad se slike doucitaju. js/main.js se ucitava tek na
+     kraju <body>, prekasno da to stigne da spreci; koverta bi tada pokrivala
+     sredinu strane i gost bi po njenom odlasku sleteo tamo umesto na pocetak.
+     Ovako se restauracija nikad i ne zakaze. Kad koverta ode, initEnvelope
+     vraca podrazumevano 'auto'. -->
+<script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
 <meta name="theme-color" content="#3F4234">
@@ -26,26 +35,52 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="img/hero.jpg" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="media/envelope-poster.jpg" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+
+<!-- ============================== KOVERTA =============================
+     Prvo sto gost vidi. Ceo ekran je video; dodir ga otvara i TIM dodirom
+     krece muzika — pretrazivaci ne daju zvuk bez gesta gosta.
+
+     Snimak SAM otvara kovertu, pa nema `loop` — vratio bi je u zatvoreno
+     stanje. Bez JS-a `autoplay` ga pusti odmah; sa JS-om ga initEnvelope
+     zaustavi na prvom kadru i pusti tek na dodir, da gost ne propusti
+     otvaranje.
+
+     Otvara se SAMO na dodir, nikad sama od sebe — nema tajmera. Dodir
+     prima #envOpen, nevidljiv checkbox preko celog ekrana; on je i
+     razlog zasto koverta radi bez JS-a (`:checked` pali gasenje) i zasto
+     tastatura radi bez koda (checkbox se fokusira, razmak ga cekira).
+
+     ZAMENA KOVERTE: dovoljno je zameniti media/envelope.mp4 i njegov
+     poster (i `preload` link u <head>). Ovaj snimak je smanjena kopija
+     korena intro-video-jsm-v3.mp4 (2160x3840, 15,4 MB) — original se ne
+     dira, ovde stoji 1080x1920 verzija od 1,7 MB:
+       ffmpeg -i intro-video-jsm-v3.mp4 -vf "scale=1080:1920:flags=lanczos" \
+              -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -an \
+              -movflags +faststart media/envelope.mp4                  -->
+<input class="env__key" id="envOpen" type="checkbox" autocomplete="off" aria-label="Otvorite pozivnicu">
+<div class="env" id="envelope" aria-hidden="true">
+  <div class="env__stage">
+    <video class="env__video" id="envVideo" src="media/envelope.mp4"
+           poster="media/envelope-poster.jpg"
+           autoplay muted playsinline preload="auto"></video>
+  </div>
+  <p class="env__hint">Dodirnite da otvorite</p>
+</div>
 <div class="grain" aria-hidden="true"></div>
 <a class="skip-link" href="#poziv">Preskoči na sadržaj</a>
 
 <!-- ============================ NAVIGACIJA ============================ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
-    <a class="nav__mark" href="#hero" aria-label="Na vrh strane">
+    <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
       <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
     </a>
-
-    <!-- PRIVREMENO — prekidač za paletu; obriši zajedno sa initThemeToggle() -->
-    <button class="nav__theme" id="themeToggle" type="button" aria-label="Promeni boje sajta">
-      <span class="nav__theme-dot" aria-hidden="true"></span>
-    </button>
 
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
       <span class="nav__toggle-lines" aria-hidden="true"><i></i><i></i></span>
@@ -67,6 +102,37 @@
 </header>
 
 <main>
+
+<!-- ============================== UVOD ===============================
+     Novi prvi ekran: video preko celog kadra, tekst direktno na njemu.
+     Stari hero sa fotografijom ostaje odmah ispod, netaknut.          -->
+<section class="intro" id="intro">
+  <div class="intro__media">
+    <video id="introVideo" src="media/hero-video.mp4" poster="media/hero-video-poster.jpg"
+           autoplay loop muted playsinline preload="auto"></video>
+  </div>
+
+  <div class="intro__content">
+    <p class="intro__eyebrow">Venčavamo se!</p>
+
+    <svg class="monogram monogram--intro is-drawn" viewBox="0 26 200 96" role="img" aria-label="Monogram: Jelena, Marko i Sofija">
+      <text class="mono__s" x="54.59" y="92">S</text>
+      <text class="mono__j" x="24.34" y="92">J</text>
+      <text class="mono__m" x="102.03" y="92">M</text>
+    </svg>
+
+    <span class="intro__rule" aria-hidden="true"></span>
+    <p class="intro__date"><span>08</span><i aria-hidden="true">·</i><span>11</span><i aria-hidden="true">·</i><span>2026</span></p>
+  </div>
+
+  <!-- Devet praznih <span>-ova su tri kolone x tri reda strelica; oblik i
+       talas nadole crta CSS (.intro__scroll), pa markup ostaje prazan. -->
+  <a class="intro__scroll" href="#hero" aria-label="Nastavi dalje">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </a>
+</section>
 
 <!-- ============================== HERO =============================== -->
 <section class="hero" id="hero">
@@ -387,6 +453,29 @@
   <span class="rsvp-bar__label">Potvrdi dolazak</span>
   <span class="rsvp-bar__note">do <span data-cfg="deadline">20.10.2026.</span></span>
 </a>
+
+<!-- ======================== MUZIKA U POZADINI ========================
+     Krece tek na dodir koverte (v. initSound / startMedia u js/main.js).
+     Dugme ostaje gostu na raspolaganju do kraja strane.
+
+     Pusta se prekodirana verzija na 128 kbps (3,6 MB umesto 9,2 MB) —
+     razlika se na telefonu ne cuje, a gost skida 5,6 MB manje. Original
+     na 320 kbps stoji pored, kao izvor za buduca prekodiranja:
+       ffmpeg -i background-music.mp3 -vn -c:a libmp3lame -b:a 128k \
+              -ar 44100 -ac 2 -map_metadata -1 background-music-128kbps.mp3
+-->
+<audio id="bgm" src="media/background-music-128kbps.mp3" loop preload="auto"></audio>
+
+<button class="sound" id="soundToggle" type="button" aria-pressed="false" aria-label="Uključi muziku">
+  <svg class="sound__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>
+  </svg>
+  <svg class="sound__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.8 5.2a9 9 0 0 1 0 13.6"/>
+  </svg>
+</button>
 
 <script src="js/config.js"></script>
 <script src="js/main.js"></script>

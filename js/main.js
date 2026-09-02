@@ -8,7 +8,6 @@
   var C = window.CONFIG || {};
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var START = new Date(C.startsAt);
   var END   = new Date(C.endsAt);
@@ -124,26 +123,37 @@
   /* ---------------------------------------------------------------
      4. Hero: slova imena + ispisivanje monograma
      --------------------------------------------------------------- */
-  function initHero() {
-    var hero = $('#hero'), title = $('[data-split]'), mono = $('.monogram');
-    if (!hero) return;
+  /* Namerno razdvojeno na dva dela zbog koverte (sekcija 14):
 
-    if (title) {
-      var i = 0;
-      title.innerHTML = title.textContent.trim().split(/\s+/).map(function (word) {
-        var chars = word.split('').map(function (ch) {
-          return '<span class="ch" style="--i:' + (i++) + '">' + ch + '</span>';
-        }).join('');
-        return '<span class="word">' + chars + '</span>';
-      }).join(' ');
-    }
+     prepareHero() — sečenje naslova na slova. Menja DOM, pa mora da se
+       desi ODMAH, dok je koverta još preko ekrana. Da čeka, strana bi
+       poskočila baš u trenutku kada se koverta digne.
+
+     playHero() — sama animacija. Čeka da koverta ode; inače bi se
+       monogram ispisao iza koverte i gost bi propustio ceo hero.       */
+  function prepareHero() {
+    var title = $('[data-split]');
+    if (!title) return;
+    var i = 0;
+    title.innerHTML = title.textContent.trim().split(/\s+/).map(function (word) {
+      var chars = word.split('').map(function (ch) {
+        return '<span class="ch" style="--i:' + (i++) + '">' + ch + '</span>';
+      }).join('');
+      return '<span class="word">' + chars + '</span>';
+    }).join(' ');
+  }
+
+  function playHero() {
+    /* `.hero .monogram`, ne `.monogram`: uvodna sekcija ima svoj monogram
+       i stoji IZNAD hero-a, pa bi goli selektor uhvatio pogrešan. */
+    var hero = $('#hero'), mono = $('.hero .monogram');
+    if (!hero) return;
 
     function play() {
       hero.classList.add('is-ready');
       if (mono) mono.classList.add('is-drawn');
     }
 
-    if (reduced) { play(); return; }
     var done = false;
     var go = function () { if (!done) { done = true; requestAnimationFrame(play); } };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
@@ -155,7 +165,7 @@
      --------------------------------------------------------------- */
   function initReveal() {
     var items = $$('[data-reveal]');
-    if (reduced || !('IntersectionObserver' in window)) {
+    if (!('IntersectionObserver' in window)) {
       items.forEach(function (el) { el.classList.add('is-in'); });
       return;
     }
@@ -179,7 +189,7 @@
      --------------------------------------------------------------- */
   function initParallax() {
     var bands = $$('[data-parallax]');
-    if (reduced || !bands.length) return;
+    if (!bands.length) return;
 
     var pending = false;
     function update() {
@@ -222,7 +232,6 @@
 
     function setNum(el, value) {
       if (!el || el.textContent === value) return;
-      if (reduced) { el.textContent = value; return; }
       el.classList.add('is-tick');
       setTimeout(function () {
         el.textContent = value;
@@ -549,7 +558,10 @@
          futer, ne želimo traku preko njega).                             */
       var pastIntro   = y + vh * 0.65 > docTop(program);
       var reachedForm = y + vh > docTop(rsvp) + 120;
-      bar.classList.toggle('is-on', pastIntro && !reachedForm);
+      var on = pastIntro && !reachedForm;
+      bar.classList.toggle('is-on', on);
+      /* dugme za zvuk se sklanja iznad trake — v. `body.has-bar .sound` */
+      document.body.classList.toggle('has-bar', on);
       pending = false;
     }
     function onScroll() {
@@ -563,49 +575,243 @@
   }
 
   /* ---------------------------------------------------------------
-     PRIVREMENO — prekidač između stare (tirkizne) i nove (maslinaste) palete.
-     Cela stara paleta je jedan [data-theme="teal"] blok u css/style.css;
-     ovde se samo postavlja ili skida atribut na <html>.
-     Kad se paleta izabere, obriši ovu funkciju, poziv u boot(), CSS blok
-     i dugme #themeToggle u index.html.
+     14. Uvodni snimak i muzika u pozadini
+
+     Pretraživači ne puštaju zvuk bez gesta gosta. Zato muzika kreće tek
+     na dodir koverte, a posle toga gost ima dugme dokle god je na strani.
      --------------------------------------------------------------- */
-  function initThemeToggle() {
-    var btn = $('#themeToggle');
-    if (!btn) return;
+  var VOL = 0.3;                     // isto kao na uzoru — 1.0 je vika
+  var introVideo = null, bgm = null, soundBtn = null, soundOn = false;
 
-    var KEY  = 'jms-theme';
-    var TEAL = 'teal';
-    var cur  = null;
+  function initIntro() {
+    introVideo = $('#introVideo');
+    if (!introVideo) return;
+  }
 
-    try { cur = localStorage.getItem(KEY); } catch (e) { /* privatni režim */ }
-    apply(cur);
+  function paintSound() {
+    if (!soundBtn) return;
+    soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', soundOn ? 'Isključi muziku' : 'Uključi muziku');
+  }
 
-    function apply(theme) {
-      if (theme === TEAL) document.documentElement.setAttribute('data-theme', TEAL);
-      else                document.documentElement.removeAttribute('data-theme');
-      // Dugme nudi paletu na koju se prelazi, pa i naziv prati to.
-      btn.setAttribute('aria-label',
-        theme === TEAL ? 'Vrati maslinaste boje' : 'Prebaci na tirkizne boje');
+  /* Postepen ulazak — puna jačina preko podizanja koverte zvuči kao udarac. */
+  function rampTo(target, ms) {
+    if (!bgm) return;
+    var from = bgm.volume, t0 = Date.now();
+    (function step() {
+      var k = Math.min(1, (Date.now() - t0) / ms);
+      bgm.volume = from + (target - from) * k;
+      if (k < 1) requestAnimationFrame(step);
+    })();
+  }
+
+  /* MORA da se zove sinhrono iz gostovog gesta (klik na kovertu ili na
+     dugme). Odloženi play() gubi pravo na zvuk i pretraživač ga odbije. */
+  function playMusic() {
+    if (!bgm) return;
+    bgm.volume = 0;
+    var p = bgm.play();
+    soundOn = true;
+    paintSound();
+    if (p && p.then) {
+      p.then(function () { rampTo(VOL, 1200); })
+       .catch(function () { soundOn = false; paintSound(); });
+    } else {
+      rampTo(VOL, 1200);            // stariji browseri ne vraćaju obećanje
+    }
+  }
+
+  function stopMusic() {
+    if (!bgm) return;
+    bgm.pause();
+    soundOn = false;
+    paintSound();
+  }
+
+  /* Snimak ide bez zvuka, pa sme uvek; muzika samo kad je gost stvarno
+     dodirnuo kovertu (`withSound`), ne kad se ona otvorila sama. */
+  function startMedia(withSound) {
+    if (introVideo) {
+      introVideo.muted = true;
+      var v = introVideo.play();
+      if (v && v['catch']) v['catch'](function () {});
+    }
+    if (withSound) playMusic();
+  }
+
+  function initSound() {
+    bgm = $('#bgm');
+    soundBtn = $('#soundToggle');
+    if (!bgm || !soundBtn) return;
+
+    bgm.volume = 0;
+    paintSound();
+
+    soundBtn.addEventListener('click', function () {
+      if (soundOn) stopMusic(); else playMusic();
+    });
+
+    /* Kad gost ode u drugi tab, muzika ćuti — ali pamtimo da ju je hteo. */
+    document.addEventListener('visibilitychange', function () {
+      if (!bgm) return;
+      if (document.hidden) { bgm.pause(); return; }
+      if (soundOn) {
+        var p = bgm.play();
+        if (p && p['catch']) p['catch'](function () {});
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     15. Koverta koja se otvara pre sajta
+
+     Otvara se ISKLJUCIVO na gostov dodir — nema tajmera koji bi je
+     digao sam. To nije kozmetika: muzika sme da krene samo iz gesta,
+     pa bi koverta koja se otvori sama odvela gosta na sajt bez zvuka.
+
+     Sam dodir hvata #envOpen (nevidljiv checkbox preko celog ekrana,
+     v. sekciju „KOVERTA" u style.css). Zahvaljujuci njemu koverta se
+     otvara i kada JS zakaze, a tastatura radi bez ijedne linije koda.
+     Ovde se na isti dogadjaj samo pusta muzika i snimak.
+
+     `done` je playHero — hero se sprema cim pretapanje krene, da bude
+     gotov dok gost jos gleda uvodni ekran.
+     --------------------------------------------------------------- */
+  function initEnvelope(done) {
+    var env = $('#envelope'), key = $('#envOpen'), envVideo = $('#envVideo');
+
+    /* Oba broja moraju da prate css/style.css, sekciju KOVERTA:
+       EXIT_MS je trajanje pretapanja, LEAD_S koliko pre kraja snimka ono
+       krece (da se ne vidi zamrznut poslednji kadar).                    */
+    var EXIT_MS = 1500;
+    var LEAD_S = 0.5;
+
+    function drop() {
+      if (env && env.parentNode) env.parentNode.removeChild(env);
+      if (key && key.parentNode) key.parentNode.removeChild(key);
     }
 
-    btn.addEventListener('click', function () {
-      cur = (cur === TEAL) ? null : TEAL;
-      apply(cur);
-      try {
-        if (cur) localStorage.setItem(KEY, cur);
-        else     localStorage.removeItem(KEY);
-      } catch (e) { /* privatni režim */ }
+    /* Jedini razlog da se koverta preskoči jeste da je nema u dokumentu.
+       Hash se NAMERNO ne gleda: koverta je početak svakog otvaranja sajta,
+       pa i kada gost dođe na /#rsvp iz poruke ili sa obeleživača. Hash i
+       dalje radi svoj posao unutar sajta — meni i ostale veze skroluju
+       kao i pre. `prefers-reduced-motion` se takođe namerno NE gleda —
+       animacija se u ovoj verziji pušta svima.                          */
+    if (!env || !key) {
+      drop();
+      done();
+      return;
+    }
+
+    /* Posle osvežavanja browser ume da vrati stanje polja; čekirana
+       koverta bi se ugasila pre nego što je gost uopšte vidi. */
+    key.checked = false;
+
+    document.body.classList.add('is-envelope', 'is-locked');
+
+    /* CSS-ov `envOpen` je rezerva za slucaj bez JS-a i ide na tvrdo
+       otkucano vreme. Cim skripta radi, pretapanje vodi ona — po duzini
+       samog snimka — pa se rezerva gasi da se dve ne otimaju o ista
+       svojstva (animacija bi pobedila tranziciju).                       */
+    env.style.animation = 'none';
+
+    /* Oba snimka stoje dok se čeka dodir: uvodni da gost ne propusti
+       početak petlje, a snimak koverte da se ne otvori pred gostom koji
+       još nije ni dodirnuo — otvaranje je poenta dodira.               */
+    if (introVideo) introVideo.pause();
+    if (envVideo) { envVideo.pause(); envVideo.currentTime = 0; }
+
+    /* Posle osvežavanja browser vraća gosta na staru poziciju skrola —
+       bez ovoga bi se koverta otvorila i otkrila sredinu strane.        */
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+    /* Hash mora iz adrese, ne samo iz računice gore: `scrollTo(0, 0)` drži
+       samo za taj trenutak, a browser ume da skoči na odeljak i kasnije —
+       kad se slike doučitaju i raspored slegne. Tada bi se koverta digla
+       i otkrila sredinu strane. Brisanje ide preko `replaceState`, pa
+       gostu ne ostaje suvišan korak u istoriji.                          */
+    if (location.hash && history.replaceState) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    var opened = false, exiting = false, finished = false;
+
+    window.scrollTo(0, 0);
+
+    /* Jedan `scrollTo` nije dovoljan: browser ume da vrati staru poziciju i
+       POSLE ovog poziva, kad se slike doučitaju i strana dobije punu visinu.
+       Zato se vrh drži i na `load`, i još jednom pred samo pretapanje — da
+       gost koji dodirne kovertu odmah, dok se strana još slaže, ne sleti na
+       njenu sredinu.                                                       */
+    window.addEventListener('load', function () {
+      if (!exiting) window.scrollTo(0, 0);
     });
+
+    /* Pocetak pretapanja. Skidanje `is-envelope` ovde je poenta: uvodni
+       ekran ispod krece da sleti sa 1,02 na 1 u istih 1,5 s koliko
+       koverta bledi, pa se dva pokreta poklapaju umesto da se smenjuju.
+       `done` (playHero) ide odmah, da hero ispod bude spreman dok gost
+       jos gleda pretapanje. Snimak namerno i dalje svira.                */
+    function exit() {
+      if (exiting) return;                     // timeupdate, ended i mreža se preklapaju
+      exiting = true;
+      window.scrollTo(0, 0);                   // poslednja provera pred otkrivanje
+      env.classList.add('is-exiting');
+      document.body.classList.remove('is-envelope');
+      done();
+      setTimeout(finish, EXIT_MS);
+    }
+
+    /* Kraj. Skrol se otkljucava tek sada: dok pretapanje traje, uvod je
+       jos u `scale`, pa bi skrol kroz njega izgledao krivo.              */
+    function finish() {
+      if (finished) return;
+      finished = true;
+      if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+      document.body.classList.remove('is-envelope', 'is-locked');
+      drop();
+    }
+
+    /* `change` stiže u istom koraku kao i gostov dodir, pa play() još ima
+       pravo na zvuk; odložen poziv bi ga izgubio i muzika bi ostala nema. */
+    function open() {
+      if (opened) return;
+      opened = true;
+      startMedia(true);
+      if (envVideo) {
+        var e = envVideo.play();
+        if (e && e['catch']) e['catch'](function () {});
+      }
+      /* Mreža ako snimak uopšte ne krene: bez nje bi gost ostao da gleda
+         nepomičan kadar. Dužina je poznata čim stignu metapodaci; pre
+         toga je `duration` NaN, pa se računa sa poznatih 2,77 s.         */
+      var lead = (envVideo && envVideo.duration ? envVideo.duration : 2.77) - LEAD_S;
+      setTimeout(exit, lead * 1000 + 900);
+    }
+
+    key.addEventListener('change', function () { if (key.checked) open(); });
+
+    /* Ne čeka se `ended`: browser na samom kraju snimka ume da zadrži
+       zamrznut (ponekad crn) kadar, pa bi se on video na punoj vidljivosti.
+       Pretapanje zato kreće LEAD_S ranije i snimak se gasi dok u njemu jos
+       ima pokreta. `ended` ostaje rezerva ako `timeupdate` ne stigne da
+       pogodi prag (poslednji stiže na ~250 ms).                          */
+    if (envVideo) {
+      envVideo.addEventListener('timeupdate', function () {
+        if (envVideo.duration && envVideo.duration - envVideo.currentTime <= LEAD_S) exit();
+      });
+      envVideo.addEventListener('ended', exit);
+    }
   }
 
   /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
-    initThemeToggle();     // PRIVREMENO — prvo, da se boje ne menjaju pred gostom
     fillConfig();
     initNav();
-    initHero();
+    prepareHero();         // sečenje naslova odmah, dok koverta pokriva ekran
+    initIntro();
     initHotels();
     initContacts();
     initReveal();          // posle generisanih kartica
@@ -615,6 +821,8 @@
     initMap();
     initRsvp();
     initRsvpBar();
+    initSound();
+    initEnvelope(playHero);  // poslednje: hero animacija čeka na pretapanje koverte
   }
 
   if (document.readyState === 'loading') {

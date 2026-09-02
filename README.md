@@ -9,6 +9,7 @@ css/style.css     dizajn
 js/config.js      datum, adresa, telefoni, hoteli, RSVP link  ← ovde menjaj podatke
 js/main.js        logika (odbrojavanje, kalendar, forma, animacije)
 img/              fotografije (vidi img/README.md)
+media/            video koverte, intro video, muzika
 apps-script/      kod za Google tabelu sa prijavama
 ```
 

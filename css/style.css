@@ -5,39 +5,60 @@
 
 /* ------------------------------- TOKENI --------------------------- */
 :root{
-  /* Pet boja sa palete: --olive-dk, --olive, --sage, --sand, --shell.
-     Uz njih četiri izvedene nijanse (--ink, --ink-soft, --olive-txt, --shell-2)
-     koje paleti nedostaju za čitljiv tekst i za treću dubinu tamnog.
-     Svaka boja ima svoju ulogu; ne mešaj svetle i tamne akcente (v. --olive/--sage). */
-  --ink:#3F4234;        /* izvedena — tekst, nav, trake, futer, toast */
-  --ink-soft:#595D4A;   /* izvedena — sporedni tekst */
-  --olive-dk:#515442;   /* tamne sekcije, odbrojavanje, puna dugmad */
-  --olive:#6F744A;      /* akcenat na SVETLOJ podlozi — LINIJE, oznake, fokus, hover */
-  --olive-txt:#575C3D;  /* izvedena — isti maslinasti, ali za SITAN TEKST.
-                           #6F744A na peščanoj podlozi pada na 3.4:1, pa
-                           natpisi (.label i sl.) uzimaju ovu tamniju. */
-  --sage:#CBD1A1;       /* akcenat na TAMNOJ podlozi */
-  --sand:#E1D7C4;       /* topla sekcija */
-  --shell:#ECE9E2;      /* podloga strane, kartice, tekst na tamnom */
-  --shell-2:#E9ECDC;    /* Sofijina sekcija — blaga zelena */
-  --err:#8C4A3A;
+  /* Jedna paleta, tirkizna. Imena tokena (--olive*, --sage) su ostala iz
+     ranije maslinaste varijante — vrednosti su tirkizne, imena su samo
+     nasledjena. Menja se boja OVDE, na jednom mestu; nigde nize u fajlu
+     nema tvrdo upisanih boja.
 
-  /* Kanali za providne varijante. Kad menjaš hex iznad, promeni i ovde. */
-  --ink-rgb:63,66,52;
-  --olive-dk-rgb:81,84,66;
-  --olive-rgb:111,116,74;
-  --sage-rgb:203,209,161;
-  --shell-rgb:236,233,226;
-  --deep-rgb:25,27,18;  /* skoro crna maslinasta — senke i prevlake preko fotografija */
+     Uloge se ne mesaju: --olive je akcenat na SVETLOJ podlozi,
+     --sage na TAMNOJ.                                                   */
+  --ink:#1B3C3A;        /* tekst, nav, trake, futer, toast, najtamnije podloge */
+  --ink-soft:#4C5C5A;   /* sporedni tekst */
+  --olive-dk:#2F5D5B;   /* tamne sekcije, odbrojavanje, puna dugmad */
+  --olive:#8FA39B;      /* akcenat na SVETLOJ podlozi — linije, oznake, fokus, hover */
+  --olive-txt:#6D8279;  /* isti ton, ali tamniji, za SITAN TEKST (.label i sl.) */
+  --sage:#8FA39B;       /* akcenat na TAMNOJ podlozi */
+  --sand:#F4EDE1;       /* topla sekcija */
+  --shell:#FBF7EF;      /* podloga strane, kartice, tekst na tamnom */
+  --shell-2:#EFE3DA;    /* Sofijina sekcija */
+  --err:#9B2C2C;
 
-  /* Fokus prsten: na svetlom maslinasti, tamne podloge ga preokreću u --sage. */
+  /* Kanali za providne varijante. Kad menjas hex iznad, promeni i ovde.
+     PAZI: --olive-dk-rgb i --shell-rgb NISU tacni parnjaci svojih hex-ova
+     (--olive-dk je #2F5D5B = 47,93,91, a --shell je #FBF7EF = 251,247,239).
+     Vrednosti su prenete takve kakve su bile, da se izgled ne promeni. */
+  --ink-rgb:27,60,58;
+  --olive-dk-rgb:31,66,63;
+  --olive-rgb:143,163,155;
+  --sage-rgb:143,163,155;
+  --shell-rgb:244,237,225;
+  --deep-rgb:11,30,29;  /* skoro crni tirkiz — senke i prevlake preko fotografija */
+
+  /* Fokus prsten: na svetlom --olive, tamne podloge ga preokrecu u --sage. */
   --focus:var(--olive);
 
-  /* Filteri za fotografije. Zelenilo na slikama radi ZA maslinastu paletu,
-     pa se smiruje manje nego što je trebalo tirkiznoj (v. [data-theme]). */
-  --photo-hero:saturate(.82) contrast(1.05) brightness(1.02);
-  --photo-story:saturate(.94);
-  --photo-band:saturate(.95);
+  /* Oreol oko svetlih slova koja stoje direktno na snimku ili fotografiji.
+     Preko njih NEMA vela, pa citljivost drzi samo ovo: uska skoro neprozirna
+     ivica koja crta slovo + siri mekani sloj koji ga odvaja od pozadine.
+     Menja se ovde, na jednom mestu — koriste ga i uvod i navigacija. */
+  --halo:0 1px 2px rgba(var(--deep-rgb),.92),0 2px 14px rgba(var(--deep-rgb),.6);
+  --halo-svg:drop-shadow(0 1px 2px rgba(var(--deep-rgb),.92))
+             drop-shadow(0 2px 10px rgba(var(--deep-rgb),.55));
+
+  /* Obrnuti par: TAMNA slova na svetlom kadru, pa je oreol svetao. Uvod
+     ga koristi jer snimak ima vedro nebo — tamna slova tu drze visok
+     kontrast, a svetli oreol ih odvaja kad prelaze preko zelenila. */
+  --halo-lt:0 1px 2px rgba(var(--shell-rgb),.95),
+            0 0 8px rgba(var(--shell-rgb),.85),
+            0 2px 16px rgba(var(--shell-rgb),.7);
+  --halo-lt-svg:drop-shadow(0 1px 2px rgba(var(--shell-rgb),.95))
+                drop-shadow(0 2px 10px rgba(var(--shell-rgb),.8));
+
+  /* Jarko roze cvetovi i zelena trava na fotografijama tuku se sa tirkizom,
+     pa se boje smiruju jace nego sto bi trebalo toplijoj paleti. Uvodni
+     snimak i hero fotografija su namerno IZUZETI — oni idu u punoj boji. */
+  --photo-story:saturate(.88);
+  --photo-band:saturate(.9);
 
   --serif:'Cormorant Garamond','Times New Roman',Georgia,serif;
   --sans:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
@@ -47,37 +68,9 @@
   --rail:70rem;
   --pad:1.25rem;
   --ease:cubic-bezier(.2,.7,.2,1);
-}
-
-/* ===================================================================
-   PRIVREMENO — prekidač za staru (tirkiznu) paletu.
-   Sve boje idu kroz tokene iznad, pa je cela stara paleta samo ovaj blok.
-   Kad se odlučiš za jednu paletu, obriši: ovaj blok, .nav__theme pravila
-   niže, initThemeToggle() u js/main.js i dugme #themeToggle u index.html.
-   =================================================================== */
-[data-theme="teal"]{
-  --ink:#1B3C3A;        /* stari --teal-900; nosi i tekst i najtamnije podloge */
-  --ink-soft:#4C5C5A;
-  --olive-dk:#2F5D5B;   /* stari --teal */
-  --olive:#8FA39B;      /* stari --sage — linije i oznake na svetlom */
-  --olive-txt:#6D8279;  /* stari --sage-dk */
-  --sage:#8FA39B;
-  --sand:#F4EDE1;       /* stari --cream */
-  --shell:#FBF7EF;      /* stari --cream-lt */
-  --shell-2:#EFE3DA;    /* stari --blush */
-  --err:#9B2C2C;
-
-  --ink-rgb:27,60,58;
-  --olive-dk-rgb:31,66,63;
-  --olive-rgb:143,163,155;
-  --sage-rgb:143,163,155;
-  --shell-rgb:244,237,225;
-  --deep-rgb:11,30,29;
-
-  /* jarko roze cvetovi i zelena trava tukli su se sa tirkizom → jače smirenje */
-  --photo-hero:saturate(.68) contrast(1.06) brightness(1.02);
-  --photo-story:saturate(.88);
-  --photo-band:saturate(.9);
+  /* Pretapanje koverte trazi krivu koja i krece i staje meko; --ease je
+     napred natovarena, pa ista duzina deluje kao rez.                   */
+  --ease-io:cubic-bezier(.4,0,.2,1);
 }
 
 /* ------------------------------- OSNOVA --------------------------- */
@@ -197,7 +190,7 @@ a{color:inherit}
 .btn--block{width:100%}
 .btn--text:hover,.btn--text:focus-visible{text-decoration-thickness:2px;opacity:.75}
 
-/* na tamnoj maslinastoj pozadini se puno dugme obrne */
+/* na tamnoj pozadini se puno dugme obrne */
 .section--dark .btn--solid,.count .btn--solid{
   background:var(--sand);border-color:var(--sand);color:var(--ink);
 }
@@ -215,7 +208,7 @@ a{color:inherit}
   --btn-flip-fg:var(--shell);
   --focus:var(--olive);
 }
-/* ...ali unutar svetle kartice se vraća na maslinasto */
+/* ...ali unutar svetle kartice se vraća na tamnu podlogu */
 .rsvp .btn--solid{background:var(--olive-dk);border-color:var(--olive-dk);color:var(--shell)}
 .rsvp .btn--solid:hover{background:var(--ink);border-color:var(--ink)}
 
@@ -268,25 +261,6 @@ a{color:inherit}
 .nav__mark svg{height:1.5rem;width:auto}
 .nav .mono__j,.nav .mono__m{fill:var(--shell)}
 .nav .mono__s{fill:var(--sage);opacity:.9}
-
-/* PRIVREMENO — prekidač za paletu (v. [data-theme="teal"] na vrhu fajla).
-   margin-right:auto ga drži uz monogram, pa meni ostaje desno na svim
-   širinama. Tačka pokazuje boju NA KOJU se prebacuje, ne trenutnu. */
-.nav__theme{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:44px;height:44px;margin-right:auto;
-  background:none;border:0;padding:0;cursor:pointer;color:inherit;
-  position:relative;z-index:2;   /* iznad .nav__menu, kao .nav__toggle */
-}
-.nav__theme-dot{
-  display:block;width:14px;height:14px;border-radius:50%;
-  background:#2F5D5B;            /* maslinasta je aktivna → nudi tirkiznu */
-  box-shadow:0 0 0 1px rgba(var(--shell-rgb),.55);
-  transition:background .3s var(--ease),transform .2s var(--ease);
-}
-[data-theme="teal"] .nav__theme-dot{background:#515442}
-.nav__theme:hover .nav__theme-dot{transform:scale(1.15)}
-.nav__theme:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 .nav__toggle{
   display:inline-flex;align-items:center;gap:.6rem;
@@ -344,25 +318,22 @@ a{color:inherit}
    kao `filter` na .nav__inner — `filter` bi napravio novi containing
    block za `position:fixed` decu, pa bi meni preko celog ekrana
    (.nav__menu) pao na visinu nav trake.                              */
-.nav__mark svg,.nav__menu ul a,.nav__toggle,.nav__cta,.nav__theme-dot{
+.nav__mark svg,.nav__menu ul a,.nav__toggle,.nav__cta{
   transition:text-shadow .4s ease,filter .4s ease;
 }
 .nav:not(.is-solid):not(.is-open) .nav__mark svg{
-  filter:drop-shadow(0 1px 3px rgba(var(--deep-rgb),.55));
+  filter:var(--halo-svg);
 }
 .nav:not(.is-solid):not(.is-open) .nav__menu ul a,
 .nav:not(.is-solid):not(.is-open) .nav__toggle,
 .nav:not(.is-solid):not(.is-open) .nav__cta{
-  text-shadow:0 1px 4px rgba(var(--deep-rgb),.6);
+  text-shadow:var(--halo);
 }
 .nav:not(.is-solid):not(.is-open) .nav__toggle-lines i{
-  box-shadow:0 1px 4px rgba(var(--deep-rgb),.55);
-}
-.nav:not(.is-solid):not(.is-open) .nav__theme-dot{
-  box-shadow:0 0 0 1px rgba(var(--shell-rgb),.7), 0 1px 5px rgba(var(--deep-rgb),.55);
+  box-shadow:0 1px 3px rgba(var(--deep-rgb),.92),0 2px 10px rgba(var(--deep-rgb),.6);
 }
 .nav:not(.is-solid):not(.is-open) .nav__cta{
-  box-shadow:0 1px 8px rgba(var(--deep-rgb),.3);
+  box-shadow:0 1px 3px rgba(var(--deep-rgb),.7),0 2px 12px rgba(var(--deep-rgb),.45);
 }
 /* kad se pilula popuni svetlom bojom, senka na tekstu više nije potrebna */
 .nav:not(.is-solid):not(.is-open) .nav__cta:hover,
@@ -383,15 +354,11 @@ body.is-locked{overflow:hidden}
    58% po vertikali je jedini opseg u kom cela porodica (glava i stopala)
    ostaje u kadru i na 1920x1080, gde se vidi samo 675 od 900 redova.
    52% po horizontali ih centrira na telefonu, gde se vidi ~35% širine.
-   Filter: zelena trava i lišće sada rade ZA paletu (maslinasta/žalfija),
-   pa je smirivanje blaže nego ranije — spušta se samo roze u cvetovima.  */
+
+   Bez `filter`: fotografija ide u punoj boji, kako je snimljena. Smirivanje
+   zasićenja je namerno skinuto — boje sada nosi sama slika.             */
 .hero__media img{
   width:100%;height:100%;object-fit:cover;object-position:52% 58%;
-  filter:var(--photo-hero);
-}
-.hero__media::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(var(--ink-rgb),.62) 0%,rgba(var(--ink-rgb),.28) 45%,rgba(var(--ink-rgb),.72) 100%);
 }
 .hero__card{
   position:relative;z-index:1;
@@ -641,7 +608,7 @@ body.is-locked{overflow:hidden}
   background-size:cover;background-position:center;
 }
 .loc__map-holder .note{color:var(--sage);max-width:22rem}
-/* Mapa se pojavljuje preko maslinastog "učitava se" polja, bez belog bleska. */
+/* Mapa se pojavljuje preko tamnog "učitava se" polja, bez belog bleska. */
 .loc__map-holder iframe{
   position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
   opacity:0;transition:opacity .6s var(--ease);
@@ -850,6 +817,255 @@ body.is-locked{overflow:hidden}
 .hero__media img{animation:kenburns 22s var(--ease) forwards}
 @keyframes kenburns{from{transform:scale(1.09)}to{transform:scale(1)}}
 
+/* dok je koverta gore, zum i uvodni snimak stoje — inace gost propusti pocetak */
+body.is-envelope .hero__media img{animation-play-state:paused}
+
+/* =================================================================
+   KOVERTA  —  otvara se pre sajta
+   -----------------------------------------------------------------
+   Ceo ekran je snimak koverte. Otvara se ISKLJUCIVO na dodir — nema
+   tajmera koji bi je otvorio sam, jer bas taj dodir pusta muziku
+   (pretrazivaci ne daju zvuk bez gesta gosta).
+
+   Dodir prima `.env__key`: nevidljiv checkbox razvucen preko celog
+   ekrana. Zato koverta radi i bez JavaScript-a — `:checked` sam pali
+   animaciju gasenja, pa gost ne moze da ostane zakljucan iza nje ako
+   skripta zakaze. Tastatura radi bez ijedne linije koda: checkbox je
+   fokusabilan i razmak ga cekira. js/main.js -> initEnvelope slusa
+   isti dogadjaj i na njemu pusta muziku i snimak.
+   ================================================================= */
+.env__key{
+  position:fixed;inset:0;z-index:201;      /* tacno iznad koverte (200) */
+  width:100%;height:100%;margin:0;
+  -webkit-appearance:none;appearance:none;
+  background:none;border:0;opacity:0;cursor:pointer;
+}
+.env__key:checked{display:none}            /* otvorena koverta ne hvata klikove */
+
+.env{
+  position:fixed;inset:0;
+  z-index:200;              /* iznad svega: skip-link 100, toast 80, zvuk 55, zrno 60, nav 50 */
+  display:grid;place-items:center;
+  background:var(--ink);
+  will-change:opacity;
+}
+
+/* Pretapanje traje 1,5 s i pocinje pola sekunde PRE kraja snimka. Klasu
+   `is-exiting` kaci js/main.js -> initEnvelope, u trenutku koji cita iz
+   samog snimka (`timeupdate`), pa ostaje tacan i kad dekodiranje kasni i
+   ako se snimak ikad ponovo iskodira u drugoj duzini.
+
+   Zato pola sekunde ranije: browser na samom kraju snimka ume da zadrzi
+   zamrznut (ponekad crn) kadar. Ovako se poslednji deo snimka vidi KROZ
+   pretapanje, dok u njemu jos ima pokreta.
+
+   Uvecanje stoji na .env__stage, ne na .env: na desktopu je .env kolona
+   sa natpisom ispod kartice, pa bi se sirila i ona.
+
+   `pointer-events:none` je sigurnosna kocnica: i ako JS nikad ne obrise
+   kovertu iz DOM-a, sajt ispod ostaje kliktabilan. */
+.env{transition:opacity 1.5s var(--ease-io)}
+.env__stage{transition:transform 1.5s var(--ease-io);will-change:transform}
+.env.is-exiting{opacity:0;pointer-events:none}
+.env.is-exiting .env__stage{transform:scale(1.05)}
+
+/* Rezerva za slucaj bez JS-a: isti kraj, samo na tvrdo otkucano vreme
+   (2,77 s snimka - 0,5 s). Cim skripta radi, initEnvelope je gasi preko
+   `env.style.animation='none'` — animacija i tranzicija bi se inace
+   otimale o ista svojstva, a animacija uvek pobedjuje.                  */
+.env__key:checked + .env{animation:envOpen 1.5s 2.27s var(--ease-io) forwards}
+@keyframes envOpen{
+  to{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.05)}
+}
+
+/* Na telefonu snimak ide preko celog ekrana. Na desktopu se svodi na
+   uspravnu karticu 9:16 — koliko i sam snimak, da se ne isece. */
+.env__stage{position:relative;overflow:hidden;width:100%;height:100vh;height:100dvh}
+.env__video{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Poziv na dodir mora da se vidi na prvi pogled: goli natpis se gubio na
+   svetlom papiru koverte, pa stoji u tamnoj piluli i krupniji je. */
+.env__hint{
+  position:absolute;left:50%;bottom:calc(2.25rem + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  margin:0;white-space:nowrap;
+  padding:.7rem 1.4rem;border-radius:999px;
+  font-family:var(--sans);font-size:clamp(.85rem,3.6vw,1.02rem);font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--shell);
+  background:rgba(var(--deep-rgb),.45);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  box-shadow:0 8px 22px -12px rgba(var(--deep-rgb),.8);
+  opacity:1;
+  transition:opacity .35s var(--ease-io);
+  animation:envHint 2.6s ease-in-out infinite;
+}
+@keyframes envHint{0%,100%{opacity:.75}50%{opacity:1}}
+/* Posle dodira natpis je odradio svoje: da nastavi da pulsira preko
+   snimka koji se otvara — a onda i preko pretapanja — samo bi odvlacio
+   pogled.
+
+   Gasi ga druga ANIMACIJA, ne tranzicija, mada tranzicija stoji gore.
+   Provereno u Chrome-u: kad kucanje (koje drzi `opacity`) i nova ciljna
+   vrednost stignu u istom koraku, tranzicija se uopste ne napravi nego
+   natpis preskoci pravo na nulu. Animacija smenjuje animaciju bez te
+   rupe. Cena je jedan kadar: `envHintOut` krece od osnovne jedinice, pa
+   ako je kucanje bas tada bilo na .75, natpis za tren skoci na punu
+   vidljivost pre nego sto ode. Na providnoj piluli, u trenutku kada je
+   gostov prst jos na ekranu, to se ne vidi.                             */
+.env__key:checked + .env .env__hint{animation:envHintOut .35s var(--ease-io) forwards}
+@keyframes envHintOut{to{opacity:0}}
+/* fokus se crta oko natpisa, jer je sam checkbox providan */
+.env__key:focus-visible + .env .env__hint{outline:2px solid var(--shell);outline-offset:3px}
+
+/* =================================================================
+   UVOD  —  snimak preko celog prvog ekrana
+   -----------------------------------------------------------------
+   Isti raspored kao .hero, samo bez kartice: tekst stoji direktno na
+   snimku, pa veo ispod njega radi celu citljivost.
+   ================================================================= */
+.intro{
+  position:relative;min-height:100vh;min-height:100svh;
+  display:grid;place-items:center;
+  padding:calc(var(--nav-h) + 2rem) var(--pad) 5rem;
+  overflow:hidden;text-align:center;color:var(--ink);
+}
+.intro__media{position:absolute;inset:0;z-index:0;background:var(--ink)}
+/* Bez `filter`: snimak ide u punoj boji, kako je snimljen. */
+.intro__media video{
+  display:block;width:100%;height:100%;object-fit:cover;
+}
+/* Bez vela preko snimka (nekadasnji .intro__media::after) citljivost drzi
+   iskljucivo senka na samom tekstu — otud izrazenije `text-shadow` nize. */
+.intro__content{position:relative;z-index:1;max-width:32rem}
+
+/* Sajt se ne pojavljuje mrtav: dok koverta bledi, uvodni ekran sleti sa
+   1,02 na 1. `is-envelope` skida initEnvelope na POCETKU pretapanja, pa
+   se dva pokreta poklapaju u istih 1,5 s.
+
+   Uvecavaju se deca, ne sama .intro: sekcija vec ima `overflow:hidden`,
+   pa je tih 2% viska odseceno i ne moze da napravi vodoravni skrol.
+   .intro__scroll je izostavljen — vec nosi translateX(-50%) za
+   centriranje, koje bi `transform` ovde obrisao.                        */
+.intro__media,.intro__content{transition:transform 1.5s var(--ease-io)}
+/* `transition:none` dok koverta stoji: bez toga bi se uvod, cim mu klasa
+   stigne na ucitavanju, 1,5 s peo sa 1 na 1,02 iza neprozirne koverte —
+   dzabe posao. Ovako u to stanje ulazi odmah, a tranzicija vazi tek za
+   povratak na 1, kad klasa spadne.                                      */
+body.is-envelope .intro__media,
+body.is-envelope .intro__content{transform:scale(1.02);transition:none}
+
+.intro__eyebrow{
+  font-family:var(--serif);font-style:italic;
+  /* Krupnije od .hero__eyebrow u kartici ispod: ovde natpis stoji sam na
+     snimku, bez okvira koji bi ga drzao.
+
+     Krive (5.6vw ovde, 3.1vw od 768px) su nasledjene iz vremena kada su
+     imena stajala odmah ispod natpisa, pa je morao da ostane manji od
+     njih. Imena su u medjuvremenu skinuta iz uvoda — gornja granica se
+     sada slobodno moze dizati ako natpis treba da bude krupniji. */
+  font-size:clamp(1.5rem,5.6vw,1.95rem);
+  letter-spacing:.02em;margin-bottom:1.5rem;
+  color:var(--ink);
+  font-weight:500;                         /* 1,500 se posebno trazi u <head> */
+  text-shadow:var(--halo-lt);
+}
+/* Monogram prati slova: taman na vedrom kadru, sa svetlim oreolom.
+   `text-shadow` ne hvata SVG <text>, pa oreol ovde radi `drop-shadow`. */
+.monogram--intro{margin-bottom:1.25rem;filter:var(--halo-lt-svg)}
+.intro .mono__j,.intro .mono__m,.intro .mono__s{font-weight:500}
+/* stroke uz fill: potezi Cormorant-a su tanki i na 500, pa ih obris zadeblja */
+.intro .mono__j,.intro .mono__m{fill:var(--ink);stroke:var(--ink);stroke-width:1.4}
+.intro .mono__s{fill:var(--olive-dk);stroke:var(--olive-dk);stroke-width:1}
+
+/* Tanke linije nemaju slovo koje bi ih nosilo, pa im treba svoja senka. */
+.intro__rule{
+  display:block;width:4.5rem;height:1px;position:relative;
+  margin:1.5rem auto;background:rgba(var(--ink-rgb),.85);
+  box-shadow:0 0 4px rgba(var(--shell-rgb),.95);
+}
+.intro__rule::before{
+  content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;
+  background:var(--olive-dk);transform:translate(-50%,-50%) rotate(45deg);
+  box-shadow:0 0 4px rgba(var(--shell-rgb),.95);
+}
+.intro__date{
+  font-family:var(--serif);font-size:clamp(1.5rem,7vw,2.1rem);font-weight:500;
+  letter-spacing:.06em;display:flex;justify-content:center;align-items:baseline;gap:.5rem;
+  color:var(--ink);
+  text-shadow:var(--halo-lt);
+}
+.intro__date i{color:var(--olive-dk);font-style:normal;font-size:.6em}
+
+/* Mreza strelica 3x3 umesto nekadasnje jedne crte: hairline crta na snimku
+   ume da procita kao deo kadra, a sirok blok strelica gost prepozna odmah
+   kao "ima jos ispod".
+
+   Ritam je isti kao kod .hero__scroll ispod (2,4 s, `--ease`, spust
+   nadole), samo razlozen na tri reda: kasnjenje ide PO REDU, ne po
+   strelici, pa citav red krene zajedno i talas prelazi celu sirinu.
+
+   44px je najmanja meta za prst i drzi visinu; sirina ide koliko tri
+   kolone uzmu (~49px, sa zarotiranim vrhovima ~53px).                 */
+.intro__scroll{
+  position:absolute;left:50%;bottom:1.5rem;z-index:1;
+  transform:translateX(-50%);min-width:44px;min-height:44px;
+  display:grid;grid-template-columns:repeat(3,auto);
+  justify-content:center;align-content:center;
+  column-gap:.6rem;
+}
+/* Strelica je kvadrat sa dve ivice, zarotiran za 45° — zato `rotate` mora
+   da stoji i u svakom kadru animacije, inace bi ga `translateY` obrisao.
+
+   Oreol ide kroz `filter`, ne `box-shadow`: senka prati potez, dok bi
+   `box-shadow` ocrtao ceo (nezarotirani) kvadrat.                      */
+.intro__scroll span{
+  display:block;width:.62rem;height:.62rem;
+  border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);
+  filter:var(--halo-lt-svg);
+  animation:cueChevron 2.4s var(--ease) infinite;
+}
+/* Zarotiran kvadrat je na ekranu visok koliko mu je dijagonala (~1,41x),
+   pa bi i nulti razmak ostavio prazninu izmedju redova. Negativna margina
+   na drugom i trecem redu skuplja trake da im se vrhovi skoro dodiruju;
+   `row-gap` ovo ne moze — ne prima negativnu vrednost.                */
+.intro__scroll span:nth-child(n+4){margin-top:-.1rem}
+.intro__scroll span:nth-child(n+4):nth-child(-n+6){animation-delay:.16s}
+.intro__scroll span:nth-child(n+7){animation-delay:.32s}
+/* Strelice se nikad ne gase do nule — poziv na skrol treba da stoji i
+   izmedju dva otkucaja; animacija samo prevuce svetliji talas nadole.  */
+@keyframes cueChevron{
+  0%,100%{opacity:.45;transform:translateY(0) rotate(45deg)}
+  40%{opacity:1;transform:translateY(.2rem) rotate(45deg)}
+}
+
+
+/* =================================================================
+   PREKIDAC ZA MUZIKU
+   -----------------------------------------------------------------
+   z-index 55: iznad nav-a (50) i RSVP trake (45), ispod toasta (80) i
+   koverte (200). `body.has-bar` ga podigne kad RSVP traka izadje —
+   inace bi ga traka, koja ide preko cele sirine, prekrila.
+   ================================================================= */
+.sound{
+  position:fixed;right:var(--pad);z-index:55;
+  bottom:calc(1.25rem + env(safe-area-inset-bottom));
+  width:2.75rem;height:2.75rem;padding:0;
+  display:grid;place-items:center;
+  border:1px solid rgba(var(--shell-rgb),.35);border-radius:50%;
+  background:rgba(var(--ink-rgb),.55);color:var(--shell);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  cursor:pointer;
+  transition:transform .45s var(--ease),background-color .3s ease,border-color .3s ease;
+}
+.sound:hover,.sound:focus-visible{background:rgba(var(--ink-rgb),.8);border-color:var(--shell)}
+.sound svg{width:1.1rem;height:1.1rem}
+.sound .sound__on{display:none}
+.sound[aria-pressed="true"] .sound__on{display:block}
+.sound[aria-pressed="true"] .sound__off{display:none}
+/* ista kriva i trajanje kao .rsvp-bar, da se pomeraju zajedno */
+body.has-bar .sound{transform:translateY(-4.1rem)}
+
 /* ------------------------------ ANIMACIJE ------------------------- */
 [data-reveal]{
   opacity:0;transform:translateY(1.6rem);
@@ -870,6 +1086,19 @@ figure[data-reveal].is-in img{clip-path:inset(0 0 0 0)}
    ================================================================= */
 @media (min-width:48rem){
   :root{--pad:2rem}
+
+  /* Preko celog sirokog ekrana koverta ispadne neprirodno razvucena;
+     9/16 je odnos samog snimka, pa se nista ne isece.                */
+  .env__stage{width:min(62vh,26rem);height:auto;aspect-ratio:9/16;
+    box-shadow:0 40px 90px -30px rgba(var(--deep-rgb),.7)}
+  /* Iz mreze u kolonu: natpis tako sam sedne ispod koverte, bez racunanja
+     njene visine. Na telefonu koverta ide preko celog ekrana, pa natpis
+     tamo ostaje apsolutno pozicioniran preko nje.                      */
+  .env{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem}
+  .env__hint{position:static;transform:none;left:auto;bottom:auto}
+
+  .intro{padding-inline:clamp(2rem,6vw,5rem)}
+  .intro__eyebrow{font-size:clamp(1.6rem,3.1vw,2.1rem)}
 
   .hero{padding-inline:clamp(2rem,6vw,5rem)}
   .hero__card{max-width:29rem}
@@ -923,30 +1152,7 @@ figure[data-reveal].is-in img{clip-path:inset(0 0 0 0)}
 
   .hero{justify-items:start}
   .hero__card{padding:3.25rem 3rem 2.75rem}
-  .hero__media::after{
-    background:linear-gradient(95deg,rgba(var(--ink-rgb),.7) 0%,rgba(var(--ink-rgb),.32) 48%,rgba(var(--ink-rgb),.42) 100%);
-  }
   .band{height:66vh}
   .split__media::before{inset:1.75rem -1.75rem -1.75rem 1.75rem}
 }
 
-/* =================================================================
-   MANJE ANIMACIJE
-   ================================================================= */
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{
-    animation-duration:.001ms!important;animation-iteration-count:1!important;
-    transition-duration:.001ms!important;transition-delay:0ms!important;
-  }
-  [data-reveal]{opacity:1!important;transform:none!important}
-  figure[data-reveal] img{clip-path:none!important}
-  .hero__names .ch{opacity:1!important;transform:none!important}
-  .hero__thread{transform:scaleY(1)!important}
-  .monogram .mono__j,.monogram .mono__m{fill-opacity:1!important;stroke-dashoffset:0!important}
-  .monogram .mono__s{opacity:.45!important;transform:none!important}
-  .hero__scroll span{animation:none;opacity:.7}
-  .band__media{top:0;bottom:0;transform:none!important}
-  .hero__media img{animation:none}
-  .toast{transition:none}
-}
