@@ -439,6 +439,28 @@ body.is-locked{overflow:hidden}
   inset:1rem -.85rem -.85rem 1rem;border:1px solid var(--sage);
 }
 
+/* ------------------------------ RAZDELNIK ------------------------- */
+/* „Naša priča" (krem) i „Sofija" (blago roze) razlikuju se za ~7/255 po
+   kanalu — bez ičega između, granica praktično ne postoji. Gradijent taj
+   šav pretvara u nameran prelaz, a ornament daje pauzu za oko. Isti jezik
+   kao ornament u sekciji „Poziv", samo širi.                          */
+.divider{
+  background:linear-gradient(180deg,var(--cream) 0%,var(--blush) 100%);
+  /* sekcije oko sebe već nose veliki padding, pa razdelnik dodaje malo */
+  padding-block:clamp(2.5rem,7vw,3.5rem);
+  display:grid;place-items:center;
+}
+.divider span{
+  display:block;position:relative;
+  width:clamp(7rem,34vw,18rem);height:1px;
+  background:linear-gradient(90deg,transparent,var(--sage),transparent);
+}
+.divider span::before{
+  content:"";position:absolute;left:50%;top:50%;
+  width:5px;height:5px;background:var(--sage);
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
 /* -------------------------------- TRAKE --------------------------- */
 .band{
   position:relative;height:52vh;min-height:17rem;max-height:38rem;
