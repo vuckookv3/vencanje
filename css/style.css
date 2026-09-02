@@ -171,11 +171,13 @@ a{color:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ------------------------------ MONOGRAM -------------------------- */
+/* Monogram je centriran po masi: ink slova J..M ide 20.21..179.79 u kutiji
+   širine 200, pa je centar tačno na x=100 i `margin:0 auto` ga poravna sa
+   centrom kartice — na istu osu kao nit iznad „Venčavamo se". */
 .monogram{width:var(--mono-w);height:auto;margin:0 auto 1.5rem}
 .mono__j,.mono__m,.mono__s{font-family:var(--serif);font-weight:300;font-size:96px}
 .mono__j,.mono__m{fill:var(--ink)}
 .mono__s{fill:var(--sage);opacity:.45}
-.mono__thread{stroke:var(--sage);stroke-width:1}
 
 /* animacija „ispisivanja" */
 .monogram .mono__j,.monogram .mono__m{
@@ -675,6 +677,30 @@ body.is-locked{overflow:hidden}
   border-top:1px solid rgba(27,42,41,.12);text-align:center;
 }
 .rsvp__buttons{display:grid;gap:.6rem;margin-top:1rem}
+
+/* ------------------------ LEBDEĆE RSVP DUGME ---------------------- */
+/* z-index 45: ispod nav-a (50), pa ga otvoreni mobilni meni prekrije.
+   `visibility` je u prelazu da traka, dok je sakrivena, ne može da se
+   fokusira tabom. env(safe-area-inset-bottom) je zbog iPhone-a — bez
+   njega dugme ulazi pod home indicator.                              */
+.rsvp-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:45;
+  display:flex;align-items:center;justify-content:center;
+  gap:.2rem .85rem;flex-wrap:wrap;
+  padding:1.05rem var(--pad);
+  padding-bottom:calc(1.05rem + env(safe-area-inset-bottom));
+  background:var(--teal-900);color:var(--cream-lt);
+  text-decoration:none;text-align:center;
+  box-shadow:0 -14px 34px -22px rgba(11,30,29,.85);
+  transform:translateY(100%);opacity:0;visibility:hidden;
+  transition:transform .45s var(--ease),opacity .35s ease,visibility .45s;
+}
+.rsvp-bar.is-on{transform:none;opacity:1;visibility:visible}
+.rsvp-bar:hover,.rsvp-bar:focus-visible{background:var(--teal)}
+.rsvp-bar__label{
+  font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;
+}
+.rsvp-bar__note{font-size:.72rem;letter-spacing:.06em;color:var(--sage)}
 
 /* -------------------------------- FOOTER -------------------------- */
 .foot{

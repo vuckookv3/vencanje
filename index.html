@@ -69,8 +69,7 @@
     <span class="hero__thread" aria-hidden="true"></span>
     <p class="hero__eyebrow">Venčavamo se!</p>
 
-    <svg class="monogram" viewBox="0 0 200 122" role="img" aria-label="Monogram: Jelena, Marko i Sofija">
-      <line class="mono__thread" x1="100" y1="0" x2="100" y2="20"/>
+    <svg class="monogram" viewBox="0 26 200 96" role="img" aria-label="Monogram: Jelena, Marko i Sofija">
       <text class="mono__s" x="54.59" y="92">S</text>
       <text class="mono__j" x="24.34" y="92">J</text>
       <text class="mono__m" x="102.03" y="92">M</text>
@@ -82,7 +81,6 @@
     <p class="hero__place" data-cfg="venue-short">Restoran DIVINE, Kraljevo</p>
 
     <div class="hero__actions">
-      <a class="btn btn--solid" href="#rsvp">Potvrdi dolazak</a>
       <a class="btn btn--outline" data-cal-google href="#" target="_blank" rel="noopener">Dodaj u kalendar</a>
     </div>
   </div>
@@ -361,8 +359,7 @@
 
 <!-- ============================== FOOTER ============================= -->
 <footer class="foot">
-  <svg class="foot__mark" viewBox="0 0 200 122" aria-hidden="true">
-    <line class="mono__thread" x1="100" y1="0" x2="100" y2="20"/>
+  <svg class="foot__mark" viewBox="0 26 200 96" aria-hidden="true">
       <text class="mono__s" x="54.59" y="92">S</text>
       <text class="mono__j" x="24.34" y="92">J</text>
       <text class="mono__m" x="102.03" y="92">M</text>
@@ -372,6 +369,15 @@
   <p class="foot__bye">Vidimo se 8. novembra.</p>
 </footer>
 
+<!-- ==================== LEBDEĆE DUGME ZA POTVRDU =====================
+     U hero-u više nema RSVP dugmeta — namerno, da gost prvo prođe kroz
+     stranu. Ova traka se pojavi kad stigne do „Programa" (dakle video je
+     priču i Sofiju) i sakrije se kad dođe do same forme, da ne stoji
+     preko nje ni preko futera. Logika je u js/main.js -> initRsvpBar. -->
+<a class="rsvp-bar" id="rsvpBar" href="#rsvp">
+  <span class="rsvp-bar__label">Potvrdi dolazak</span>
+  <span class="rsvp-bar__note">do <span data-cfg="deadline">20.10.2026.</span></span>
+</a>
 
 <script src="js/config.js"></script>
 <script src="js/main.js"></script>

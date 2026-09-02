@@ -105,6 +105,12 @@ Pa kod registrara napravi `CNAME` zapis ka `<korisnik>.github.io`
   *Napomena:* da bi gost sačuvao događaj, mora biti prijavljen na Google račun.
   Ako se pokaže da je to problem za goste sa iPhone-a, `.ics` opcija se može
   vratiti.
+- **Lebdeće dugme „Potvrdi dolazak"** (dole na ekranu) pojavi se kad gost
+  skroluje do sekcije „Program", a sakrije se kad stigne do same forme. U
+  hero-u namerno NEMA RSVP dugmeta — da gost prvo vidi stranu, a ne da
+  jednim klikom preskoči sve. Kome se ne čeka, prečica je i dalje u meniju.
+  Gost koji je već potvrdio (pamti se u `localStorage`) ne vidi traku.
+  Prag i logika: `js/main.js` → `initRsvpBar`.
 - **Sve fotografije se učitavaju odmah** sa stranom (nema `loading="lazy"`), pa
   ne „uskaču" dok gost skroluje. Cena: ~1,3 MB slika na prvo otvaranje. Hero
   ima `fetchpriority="high"` i `preload`, pa se on i dalje prvi pojavi.

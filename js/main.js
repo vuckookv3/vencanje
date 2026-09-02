@@ -527,6 +527,42 @@
   }
 
   /* ---------------------------------------------------------------
+     13. Lebdeće dugme za potvrdu dolaska
+     --------------------------------------------------------------- */
+  function initRsvpBar() {
+    var bar = $('#rsvpBar'), program = $('#program'), rsvp = $('#rsvp');
+    if (!bar || !program || !rsvp) return;
+
+    /* Ko je već potvrdio, njega traka ne treba da gnjavi do kraja strane. */
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE));
+      if (saved && saved.ime) return;
+    } catch (e) { /* privatni režim — samo nastavi */ }
+
+    function docTop(el) { return el.getBoundingClientRect().top + window.scrollY; }
+
+    var pending = false;
+    function update() {
+      var y = window.scrollY, vh = window.innerHeight;
+      /* Pojavi se kad „Program" uđe u kadar — dotle je gost prošao priču i
+         Sofiju. Sakrij se kad stigne do forme i ostani sakrivena (ispod je
+         futer, ne želimo traku preko njega).                             */
+      var pastIntro   = y + vh * 0.65 > docTop(program);
+      var reachedForm = y + vh > docTop(rsvp) + 120;
+      bar.classList.toggle('is-on', pastIntro && !reachedForm);
+      pending = false;
+    }
+    function onScroll() {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+
+  /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
@@ -541,6 +577,7 @@
     initCalendar();
     initMap();
     initRsvp();
+    initRsvpBar();
   }
 
   if (document.readyState === 'loading') {
