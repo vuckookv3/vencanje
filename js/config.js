@@ -59,11 +59,23 @@ window.CONFIG = {
      TODO: proveri nazive, cene i telefone; dodaj ili obriši kartice.
      phone: '' → dugme "Pozovi" se ne prikazuje.                        */
   hotels: [
+    /* Konačište OLIMP, Adranska 17. Podaci provereni na sajtu Turističke
+       organizacije Kraljeva (naziv, adresa, fiksni telefon) i na Booking-u
+       preko hotels-in-serbia / trip.com (besplatan parking, restoran,
+       recepcija non-stop, 2,7 km od centra Kraljeva).
+
+       „Oko 2 km do restorana" je izračunato iz koordinata: Olimp
+       43.73137, 20.65646 → Divine 43.74062, 20.66885 = 1,4 km vazdušnom
+       linijom, ~2 km putem.
+
+       NIJE potvrđeno iz dva izvora, pa se NE tvrdi u tekstu: da se plaća
+       samo gotovinom i da doručak ulazi u cenu. Proveri kad ih pozoveš,
+       pa dopiši ako stoji.                                              */
     {
-      name: 'Hotel Kraljevo',
-      note: 'U samom centru, 10 minuta autom do restorana.',
-      phone: '',
-      mapQuery: 'Hotel Kraljevo, Kraljevo'
+      name: 'Konačište OLIMP',
+      note: 'Oko 2 km do restorana, sa svojim restoranom i besplatnim parkingom.',
+      phone: '+381 36 352 770',
+      mapQuery: 'Konačište Olimp, Adranska 17, Kraljevo'
     },
     {
       name: 'Hotel Turist',
