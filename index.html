@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
-<meta name="theme-color" content="#2F5D5B">
+<meta name="theme-color" content="#3F4234">
 <!-- Chrome / Google Translate: ne predlaži prevod ove strane. Sajt je namerno
      samo na srpskom, pa gostima ne treba da iskače traka „Prevedi stranu?". -->
 <meta name="google" content="notranslate">
@@ -37,6 +37,11 @@
     <a class="nav__mark" href="#hero" aria-label="Na vrh strane">
       <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
     </a>
+
+    <!-- PRIVREMENO — prekidač za paletu; obriši zajedno sa initThemeToggle() -->
+    <button class="nav__theme" id="themeToggle" type="button" aria-label="Promeni boje sajta">
+      <span class="nav__theme-dot" aria-hidden="true"></span>
+    </button>
 
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
       <span class="nav__toggle-lines" aria-hidden="true"><i></i><i></i></span>
@@ -112,7 +117,7 @@
 </section>
 
 <!-- ============================ NAŠA PRIČA =========================== -->
-<section class="section section--cream" id="prica">
+<section class="section section--sand" id="prica">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>01 — Naša priča</p>
 
@@ -145,13 +150,13 @@
 </div>
 
 <!-- ============================== SOFIJA ============================= -->
-<section class="section section--blush" id="sofija">
+<section class="section section--soft" id="sofija">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>02 — Sofija</p>
 
     <div class="sofija">
       <figure class="sofija__media" data-reveal>
-        <img src="img/sofija.jpg" alt="Nasmejana Sofija" width="1000" height="1250">
+        <img src="img/sofija.jpg" alt="Nasmejana Sofija" width="860" height="1075">
       </figure>
 
       <div class="sofija__text" data-reveal data-reveal-delay="1">
@@ -169,7 +174,7 @@
 </section>
 
 <!-- ============================== PROGRAM ============================ -->
-<section class="section section--teal" id="program">
+<section class="section section--dark" id="program">
   <div class="wrap wrap--narrow">
     <p class="label label--sticky" data-reveal>03 — Program dana</p>
     <h2 class="h2 center" data-reveal>Nedelja, 8. novembar 2026.</h2>
@@ -206,7 +211,7 @@
 </div>
 
 <!-- ============================= LOKACIJA ============================ -->
-<section class="section section--cream" id="lokacija">
+<section class="section section--sand" id="lokacija">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>04 — Lokacija</p>
 
@@ -236,7 +241,7 @@
 </section>
 
 <!-- ============================== SMEŠTAJ ============================ -->
-<section class="section section--teal" id="smestaj">
+<section class="section section--dark" id="smestaj">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>05 — Smeštaj</p>
     <h2 class="h2 center" data-reveal>Gde prenoćiti u Kraljevu</h2>
@@ -249,7 +254,7 @@
 </section>
 
 <!-- ============================== PITANJA ============================ -->
-<section class="section section--cream" id="pitanja">
+<section class="section section--sand" id="pitanja">
   <div class="wrap wrap--narrow">
     <p class="label label--sticky" data-reveal>06 — Česta pitanja</p>
     <h2 class="h2 center" data-reveal>Sve što bi moglo da Vas zanima</h2>
@@ -284,7 +289,7 @@
 </div>
 
 <!-- =============================== RSVP ============================== -->
-<section class="section section--teal" id="rsvp">
+<section class="section section--dark" id="rsvp">
   <div class="wrap wrap--narrow">
     <p class="label label--sticky" data-reveal>07 — Potvrda dolaska</p>
     <h2 class="h2 center" data-reveal>Da li nam se pridružujete?</h2>

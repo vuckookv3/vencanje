@@ -563,9 +563,46 @@
   }
 
   /* ---------------------------------------------------------------
+     PRIVREMENO — prekidač između stare (tirkizne) i nove (maslinaste) palete.
+     Cela stara paleta je jedan [data-theme="teal"] blok u css/style.css;
+     ovde se samo postavlja ili skida atribut na <html>.
+     Kad se paleta izabere, obriši ovu funkciju, poziv u boot(), CSS blok
+     i dugme #themeToggle u index.html.
+     --------------------------------------------------------------- */
+  function initThemeToggle() {
+    var btn = $('#themeToggle');
+    if (!btn) return;
+
+    var KEY  = 'jms-theme';
+    var TEAL = 'teal';
+    var cur  = null;
+
+    try { cur = localStorage.getItem(KEY); } catch (e) { /* privatni režim */ }
+    apply(cur);
+
+    function apply(theme) {
+      if (theme === TEAL) document.documentElement.setAttribute('data-theme', TEAL);
+      else                document.documentElement.removeAttribute('data-theme');
+      // Dugme nudi paletu na koju se prelazi, pa i naziv prati to.
+      btn.setAttribute('aria-label',
+        theme === TEAL ? 'Vrati maslinaste boje' : 'Prebaci na tirkizne boje');
+    }
+
+    btn.addEventListener('click', function () {
+      cur = (cur === TEAL) ? null : TEAL;
+      apply(cur);
+      try {
+        if (cur) localStorage.setItem(KEY, cur);
+        else     localStorage.removeItem(KEY);
+      } catch (e) { /* privatni režim */ }
+    });
+  }
+
+  /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
+    initThemeToggle();     // PRIVREMENO — prvo, da se boje ne menjaju pred gostom
     fillConfig();
     initNav();
     initHero();
