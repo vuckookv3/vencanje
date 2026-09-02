@@ -1,0 +1,11 @@
+# Privatna pozivnica — sajt ne treba da se pojavljuje u pretragama.
+# Blokira sve poslušne crawler-e (Google, Bing, AI botovi...).
+User-agent: *
+Disallow: /
+
+# AdsBot-Google ignoriše grupu „User-agent: *", pa mu treba izričito pravilo.
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: AdsBot-Google-Mobile
+Disallow: /
