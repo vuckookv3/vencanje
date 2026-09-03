@@ -10,10 +10,10 @@ sam kadrira. Bitno je da glavni motiv nije skroz na ivici.
 | Fajl | Gde se vidi | Preporučena veličina | Šta treba da bude na slici |
 |---|---|---|---|
 | `hero.jpg` | Prva slika, cela širina ekrana | **prava fotografija** (1200×900, 4:3) | Jelena i Marko pored bazena. Kadar i `object-position: 57% 25%` su izračunati tako da oba lica ostanu u kadru i desno od svetle kartice — ako menjaš sliku, proveri oba, i to na 2560×1080 (najmanje mesta iznad glava) i na 360×800 (najuži prozor). |
-| `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (856×1070, 4:5) | Jelena i Marko na brodu. Izrezano iz Instagram screenshot-a — bez statusne trake, imena profila, značke „1/8", lajkova i komentara. |
+| `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (856×1070, 4:5) | Isti kadar kao `hero.jpg` — Jelena i Marko pored bazena, samo uspravno izrezano (iz originala: 1100×1375 sa (477,369)). Namerno se ponavlja: na telefonu kartica prekriva lica u herou, pa je ovo jedino mesto gde se oboje jasno vide. CSS ovde NE seče (`aspect-ratio:4/5` + slika je već 4:5), pa je kadar tačno ono što se vidi. |
 | `sofija.jpg` | Sekcija „Sofija" | **prava fotografija** (860×1075, 4:5) | Sofija. Seče se u oblik kapije (zaobljeno gore) — ostavi prostor iznad glave I centriraj lice po horizontali, inače luk odseče kosu sa strane. |
-| `band-2.jpg` | Traka pre RSVP forme | 1500–1800 px široko (pejzaž) | Tamniji, večernji kadar (preko njega ide citat). |
-| `band-3.jpg` | Traka pre „Lokacije" | **prava fotografija** (1537×1023) | Svečana sala restorana DIVINE, spremna za svadbu. |
+| `band-2.jpg` | Traka pre RSVP forme — **trenutno isključena** | 1500–1800 px široko (pejzaž) | Tamniji, večernji kadar (preko njega ide citat). „Traka 3" je zakomentarisana u `index.html` jer je sajt bio predug — **ne briši sliku**, treba joj kad se traka vrati. |
+| `band-3.jpg` | Traka pre „Lokacije" — **trenutno isključena** | **prava fotografija** (1537×1023) | Svečana sala restorana DIVINE, spremna za svadbu. „Traka 2" je zakomentarisana u `index.html` — **ne briši sliku**. |
 | `texture.jpg` | Podloga sekcije „Poziv" i mape | bilo koja | Tekstura papira. Ne menjaj bez potrebe. |
 
 ## Pre nego što ubaciš svoje slike

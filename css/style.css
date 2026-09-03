@@ -56,7 +56,12 @@
 
   /* Jarko roze cvetovi i zelena trava na fotografijama tuku se sa tirkizom,
      pa se boje smiruju jace nego sto bi trebalo toplijoj paleti. Uvodni
-     snimak i hero fotografija su namerno IZUZETI — oni idu u punoj boji. */
+     snimak i hero fotografija su namerno IZUZETI — oni idu u punoj boji.
+
+     `story.jpg` je sada isti kadar kao hero, samo uspravan, i svesno OSTAJE
+     malo smirenije: hero ide preko celog ekrana i treba da udari, a „Nasa
+     prica" je tiha sekcija na pescanoj podlozi. Ako ikad zatreba da budu
+     identicni, ovde je dovoljno staviti `none`. */
   --photo-story:saturate(.88);
   --photo-band:saturate(.9);
 
@@ -528,6 +533,27 @@ body.is-locked{overflow:hidden}
 .section--soft{background:var(--shell-2)}
 .section--dark{background:var(--olive-dk);color:var(--shell)}
 .section--dark .h2{color:var(--shell)}
+
+/* Dve tamne sekcije jedna do druge — tako stoji dok je „Traka 3" privremeno
+   iskljucena. Boja se tu ne menja, pa granicu nosi samo razmak; a dva velika
+   padding-a se saberu u rupu od ~220px u kojoj nista ne kaze da je pocela
+   nova celina. Zato se sav skuplja s obe strane i dobija isti ornament kao
+   `.divider`, samo u svetloj boji jer stoji na tamnom.
+
+   Selektor je namerno `+` (i `:has`): cim se traka vrati izmedju njih,
+   pravilo se samo ugasi — nista ne treba rucno vracati.                */
+.section--dark:has(+ .section--dark){padding-bottom:clamp(2.25rem,7vw,3.5rem)}
+.section--dark + .section--dark{padding-top:clamp(2.25rem,7vw,3.5rem)}
+.section--dark + .section--dark::before,
+.section--dark + .section--dark::after{content:"";position:absolute;top:0;left:50%}
+.section--dark + .section--dark::before{
+  width:clamp(7rem,34vw,18rem);height:1px;transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,rgba(var(--shell-rgb),.3),transparent);
+}
+.section--dark + .section--dark::after{
+  width:5px;height:5px;background:rgba(var(--shell-rgb),.3);
+  transform:translate(-50%,-50%) rotate(45deg);
+}
 
 /* ----------------------------- NAŠA PRIČA ------------------------- */
 .split{display:grid;gap:2.5rem}
@@ -1060,14 +1086,21 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
    nadole), samo razlozen na tri reda: kasnjenje ide PO REDU, ne po
    strelici, pa citav red krene zajedno i talas prelazi celu sirinu.
 
-   44px je najmanja meta za prst i drzi visinu; sirina ide koliko tri
-   kolone uzmu (~49px, sa zarotiranim vrhovima ~53px).                 */
+   Velicina se vodi iz jednog mesta — `--cue`. Razmak medju kolonama,
+   negativna margina redova i spust u animaciji su svi izvedeni iz nje,
+   jer su sva cetiri broja vezana za istu geometriju: promeni samo `--cue`
+   i mreza ostaje ista, samo veca ili manja.
+
+   44px je najmanja meta za prst; na .84rem strelice same uzmu ~66px
+   sirine (sa zarotiranim vrhovima ~72px) i ~42px visine, pa `min-height`
+   jos drzi metu, a `min-width` je vise ne stiska.                      */
 .intro__scroll{
+  --cue:.84rem;
   position:absolute;left:50%;bottom:1.5rem;z-index:1;
   transform:translateX(-50%);min-width:44px;min-height:44px;
   display:grid;grid-template-columns:repeat(3,auto);
   justify-content:center;align-content:center;
-  column-gap:.6rem;
+  column-gap:calc(var(--cue) * .97);
 }
 /* Strelica je kvadrat sa dve ivice, zarotiran za 45° — zato `rotate` mora
    da stoji i u svakom kadru animacije, inace bi ga `translateY` obrisao.
@@ -1075,7 +1108,7 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
    Oreol ide kroz `filter`, ne `box-shadow`: senka prati potez, dok bi
    `box-shadow` ocrtao ceo (nezarotirani) kvadrat.                      */
 .intro__scroll span{
-  display:block;width:.62rem;height:.62rem;
+  display:block;width:var(--cue);height:var(--cue);
   border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);
   filter:var(--halo-lt-svg);
   animation:cueChevron 2.4s var(--ease) infinite;
@@ -1084,14 +1117,14 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
    pa bi i nulti razmak ostavio prazninu izmedju redova. Negativna margina
    na drugom i trecem redu skuplja trake da im se vrhovi skoro dodiruju;
    `row-gap` ovo ne moze — ne prima negativnu vrednost.                */
-.intro__scroll span:nth-child(n+4){margin-top:-.1rem}
+.intro__scroll span:nth-child(n+4){margin-top:calc(var(--cue) * -.16)}
 .intro__scroll span:nth-child(n+4):nth-child(-n+6){animation-delay:.16s}
 .intro__scroll span:nth-child(n+7){animation-delay:.32s}
 /* Strelice se nikad ne gase do nule — poziv na skrol treba da stoji i
    izmedju dva otkucaja; animacija samo prevuce svetliji talas nadole.  */
 @keyframes cueChevron{
   0%,100%{opacity:.45;transform:translateY(0) rotate(45deg)}
-  40%{opacity:1;transform:translateY(.2rem) rotate(45deg)}
+  40%{opacity:1;transform:translateY(calc(var(--cue) * .32)) rotate(45deg)}
 }
 
 

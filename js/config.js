@@ -74,7 +74,7 @@ window.CONFIG = {
     {
       name: 'Konačište OLIMP',
       note: 'Oko 2 km do restorana, sa svojim restoranom i besplatnim parkingom.',
-      phone: '+381 36 352 770',
+      phone: '',
       mapQuery: 'Konačište Olimp, Adranska 17, Kraljevo'
     },
     {
