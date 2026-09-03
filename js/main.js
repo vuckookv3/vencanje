@@ -594,6 +594,7 @@
     if (!env || !key) {
       drop();
       done();
+      initIntroNudge();
       return;
     }
 
@@ -636,6 +637,7 @@
       if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
       document.body.classList.remove('is-envelope', 'is-locked');
       drop();
+      initIntroNudge();
     }
 
     function open() {
@@ -661,56 +663,57 @@
     }
   }
 
+  var SCROLL_MIN = 900, SCROLL_MAX = 2400, SCROLL_PER_PX = 0.45;
+
+  function targetY(el) {
+    var root = document.documentElement;
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    var max = document.body.scrollHeight - window.innerHeight;
+    var y = el.getBoundingClientRect().top + window.scrollY - pad;
+    return Math.max(0, Math.min(Math.round(y), max));
+  }
+
+  function easeInOut(t) {
+    return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function glideTo(to) {
+    var root = document.documentElement;
+    var from = window.scrollY;
+    var dist = to - from;
+    if (!dist) return;
+    var ms = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, Math.abs(dist) * SCROLL_PER_PX));
+    var t0 = null, stopped = false;
+
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+
+    function stop() { stopped = true; }
+    var opts = { passive: true };
+    window.addEventListener('wheel', stop, opts);
+    window.addEventListener('touchstart', stop, opts);
+    window.addEventListener('keydown', stop);
+
+    function end() {
+      root.style.scrollBehavior = prev;
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+      window.removeEventListener('keydown', stop);
+    }
+
+    function step(now) {
+      if (stopped) return end();
+      if (t0 === null) t0 = now;
+      var p = Math.min((now - t0) / ms, 1);
+      window.scrollTo(0, from + dist * easeInOut(p));
+      if (p < 1) requestAnimationFrame(step); else end();
+    }
+    requestAnimationFrame(step);
+  }
+
   function initSlowScroll() {
     var links = $$('a[data-scroll-slow]');
     if (!links.length) return;
-
-    var root = document.documentElement;
-    var MIN = 900, MAX = 2400, PER_PX = 0.45;
-
-    function targetY(el) {
-      var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
-      var max = document.body.scrollHeight - window.innerHeight;
-      var y = el.getBoundingClientRect().top + window.scrollY - pad;
-      return Math.max(0, Math.min(Math.round(y), max));
-    }
-
-    function ease(t) {
-      return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function glide(to) {
-      var from = window.scrollY;
-      var dist = to - from;
-      if (!dist) return;
-      var ms = Math.min(MAX, Math.max(MIN, Math.abs(dist) * PER_PX));
-      var t0 = null, stopped = false;
-
-      var prev = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-
-      function stop() { stopped = true; }
-      var opts = { passive: true };
-      window.addEventListener('wheel', stop, opts);
-      window.addEventListener('touchstart', stop, opts);
-      window.addEventListener('keydown', stop);
-
-      function end() {
-        root.style.scrollBehavior = prev;
-        window.removeEventListener('wheel', stop);
-        window.removeEventListener('touchstart', stop);
-        window.removeEventListener('keydown', stop);
-      }
-
-      function step(now) {
-        if (stopped) return end();
-        if (t0 === null) t0 = now;
-        var p = Math.min((now - t0) / ms, 1);
-        window.scrollTo(0, from + dist * ease(p));
-        if (p < 1) requestAnimationFrame(step); else end();
-      }
-      requestAnimationFrame(step);
-    }
 
     links.forEach(function (a) {
       a.addEventListener('click', function (e) {
@@ -718,11 +721,47 @@
         var target = id && id.charAt(0) === '#' && $(id);
         if (!target) return;
         e.preventDefault();
-        glide(targetY(target));
+        glideTo(targetY(target));
 
         if (history.pushState) history.pushState(null, '', id);
       });
     });
+  }
+
+  var NUDGE_MS = 8000;
+  var NUDGE_KEY = 'jms-intro-nudge';
+
+  function nudgeDone() {
+    try { sessionStorage.setItem(NUDGE_KEY, '1'); } catch (e) {   }
+  }
+
+  function initIntroNudge() {
+    var hero = $('#hero');
+    if (!hero) return;
+    try { if (sessionStorage.getItem(NUDGE_KEY)) return; } catch (e) {}
+
+    var timer = null;
+    var events = ['wheel', 'touchstart', 'keydown', 'click', 'scroll'];
+
+    function off() {
+      events.forEach(function (n) { window.removeEventListener(n, cancel); });
+    }
+
+    function cancel() {
+      clearTimeout(timer);
+      off();
+      nudgeDone();
+    }
+    events.forEach(function (n) {
+      window.addEventListener(n, cancel, { passive: true });
+    });
+
+    timer = setTimeout(function () {
+      off();
+      if (window.scrollY > 4) return nudgeDone();
+      nudgeDone();
+      glideTo(targetY(hero));
+    }, NUDGE_MS);
   }
 
   function boot() {

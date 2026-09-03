@@ -1098,9 +1098,23 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
   --cue:.84rem;
   position:absolute;left:50%;bottom:1.5rem;z-index:1;
   transform:translateX(-50%);min-width:44px;min-height:44px;
+  display:grid;justify-items:center;align-content:center;gap:.55rem;
+  text-decoration:none;
+}
+/* Mreza 3x3 je sada na omotacu, da natpis ne udje u `:nth-child` racun. */
+.intro__scroll-arrows{
   display:grid;grid-template-columns:repeat(3,auto);
-  justify-content:center;align-content:center;
+  justify-content:center;
   column-gap:calc(var(--cue) * .97);
+}
+/* Rec radi ono sto strelica ne ume: kaze sta da se uradi. Ista tipografija
+   kao `.hero__place` (sans, verzal, razmaknuto), tamna sa svetlim oreolom
+   kao i ostatak uvoda — pilula kao na koverti ovde ne treba, jer natpis
+   stoji na svetlom kadru, a ne na tamnom snimku koverte.                */
+.intro__scroll-label{
+  font-family:var(--sans);font-size:.66rem;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);text-shadow:var(--halo-lt);white-space:nowrap;
 }
 /* Strelica je kvadrat sa dve ivice, zarotiran za 45° — zato `rotate` mora
    da stoji i u svakom kadru animacije, inace bi ga `translateY` obrisao.
@@ -1123,7 +1137,7 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
     rgba(var(--shell-rgb),.5)  45%,
     rgba(var(--shell-rgb),0)   100%);
 }
-.intro__scroll span{
+.intro__scroll-arrows span{
   display:block;width:var(--cue);height:var(--cue);
   border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
   filter:var(--halo-lt-svg);
@@ -1133,9 +1147,9 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
    pa bi i nulti razmak ostavio prazninu izmedju redova. Negativna margina
    na drugom i trecem redu skuplja trake da im se vrhovi skoro dodiruju;
    `row-gap` ovo ne moze — ne prima negativnu vrednost.                */
-.intro__scroll span:nth-child(n+4){margin-top:calc(var(--cue) * -.16)}
-.intro__scroll span:nth-child(n+4):nth-child(-n+6){animation-delay:.16s}
-.intro__scroll span:nth-child(n+7){animation-delay:.32s}
+.intro__scroll-arrows span:nth-child(n+4){margin-top:calc(var(--cue) * -.16)}
+.intro__scroll-arrows span:nth-child(n+4):nth-child(-n+6){animation-delay:.16s}
+.intro__scroll-arrows span:nth-child(n+7){animation-delay:.32s}
 /* Strelice se nikad ne gase do nule — poziv na skrol treba da stoji i
    izmedju dva otkucaja; animacija samo prevuce svetliji talas nadole.
 

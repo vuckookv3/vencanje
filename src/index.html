@@ -164,11 +164,22 @@
   </div>
 
   <!-- Devet praznih <span>-ova su tri kolone x tri reda strelica; oblik i
-       talas nadole crta CSS (.intro__scroll), pa markup ostaje prazan. -->
-  <a class="intro__scroll" href="#hero" aria-label="Nastavi dalje">
-    <span></span><span></span><span></span>
-    <span></span><span></span><span></span>
-    <span></span><span></span><span></span>
+       talas nadole crta CSS (.intro__scroll-arrows), pa markup ostaje prazan.
+       Strelice su umotane u svoj <span> da natpis ispod ne upadne u
+       `:nth-child` racunicu koja redovima daje kasnjenje.
+
+       Natpis NIJE ukras: gosti su javili da gledaju snimak i ne shvate da
+       treba skrolovati. Koverta isti problem resava recima („Dodirnite da
+       otvorite") i tamo niko nije zapeo — zato i ovde ide rec, ne samo
+       strelica. Ona nosi pristupacno ime linka, pa `aria-label` vise ne
+       treba (skriveno ime bi pregazilo vidljivi tekst).                  -->
+  <a class="intro__scroll" href="#hero">
+    <span class="intro__scroll-arrows" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </span>
+    <span class="intro__scroll-label">Skrolujte</span>
   </a>
 </section>
 

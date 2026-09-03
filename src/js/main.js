@@ -700,6 +700,7 @@
     if (!env || !key) {
       drop();
       done();
+      initIntroNudge();
       return;
     }
 
@@ -770,6 +771,7 @@
       if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
       document.body.classList.remove('is-envelope', 'is-locked');
       drop();
+      initIntroNudge();            /* tek sad gost uopste MOZE da skroluje */
     }
 
     /* `change` stiže u istom koraku kao i gostov dodir, pa play() još ima
@@ -814,60 +816,64 @@
      Trajanje ide po duzini puta, ne fiksno: na telefonu je strana duza
      nego na desktopu, pa bi isti broj milisekundi davao dva razlicita
      osecaja brzine.                                                    */
+  var SCROLL_MIN = 900, SCROLL_MAX = 2400, SCROLL_PER_PX = 0.45;
+
+  /* Ista visina koju `scroll-padding-top` (CSS) daje svim ostalim vezama,
+     da i dugme i sam nagovestaj slete tacno gde i meni i traka na dnu.  */
+  function targetY(el) {
+    var root = document.documentElement;
+    var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+    var max = document.body.scrollHeight - window.innerHeight;
+    var y = el.getBoundingClientRect().top + window.scrollY - pad;
+    return Math.max(0, Math.min(Math.round(y), max));
+  }
+
+  function easeInOut(t) {
+    return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* Polagan, mek skrol do zadate visine. Koriste ga dva mesta: dugme
+     „Potvrdi dolazak" i nagovestaj na uvodu — zato stoji ovde, a ne u
+     jednom od njih.                                                    */
+  function glideTo(to) {
+    var root = document.documentElement;
+    var from = window.scrollY;
+    var dist = to - from;
+    if (!dist) return;
+    var ms = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, Math.abs(dist) * SCROLL_PER_PX));
+    var t0 = null, stopped = false;
+
+    /* CSS `scroll-behavior:smooth` bi svaki `scrollTo` ispod jos jednom
+       zagladio i tukao bi se sa ovom animacijom — gasi se dok traje.    */
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+
+    function stop() { stopped = true; }
+    var opts = { passive: true };
+    window.addEventListener('wheel', stop, opts);
+    window.addEventListener('touchstart', stop, opts);
+    window.addEventListener('keydown', stop);
+
+    function end() {
+      root.style.scrollBehavior = prev;
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+      window.removeEventListener('keydown', stop);
+    }
+
+    function step(now) {
+      if (stopped) return end();                 /* gost je preuzeo skrol */
+      if (t0 === null) t0 = now;
+      var p = Math.min((now - t0) / ms, 1);
+      window.scrollTo(0, from + dist * easeInOut(p));
+      if (p < 1) requestAnimationFrame(step); else end();
+    }
+    requestAnimationFrame(step);
+  }
+
   function initSlowScroll() {
     var links = $$('a[data-scroll-slow]');
     if (!links.length) return;
-
-    var root = document.documentElement;
-    var MIN = 900, MAX = 2400, PER_PX = 0.45;
-
-    /* Ista visina koju `scroll-padding-top` (CSS) daje svim ostalim
-       vezama, da dugme sleti tacno gde i meni i traka na dnu.          */
-    function targetY(el) {
-      var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
-      var max = document.body.scrollHeight - window.innerHeight;
-      var y = el.getBoundingClientRect().top + window.scrollY - pad;
-      return Math.max(0, Math.min(Math.round(y), max));
-    }
-
-    function ease(t) {                                 // easeInOutCubic
-      return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function glide(to) {
-      var from = window.scrollY;
-      var dist = to - from;
-      if (!dist) return;
-      var ms = Math.min(MAX, Math.max(MIN, Math.abs(dist) * PER_PX));
-      var t0 = null, stopped = false;
-
-      /* CSS `scroll-behavior:smooth` bi svaki `scrollTo` ispod jos jednom
-         zagladio i tukao bi se sa ovom animacijom — gasi se dok traje.  */
-      var prev = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-
-      function stop() { stopped = true; }
-      var opts = { passive: true };
-      window.addEventListener('wheel', stop, opts);
-      window.addEventListener('touchstart', stop, opts);
-      window.addEventListener('keydown', stop);
-
-      function end() {
-        root.style.scrollBehavior = prev;
-        window.removeEventListener('wheel', stop);
-        window.removeEventListener('touchstart', stop);
-        window.removeEventListener('keydown', stop);
-      }
-
-      function step(now) {
-        if (stopped) return end();                 /* gost je preuzeo skrol */
-        if (t0 === null) t0 = now;
-        var p = Math.min((now - t0) / ms, 1);
-        window.scrollTo(0, from + dist * ease(p));
-        if (p < 1) requestAnimationFrame(step); else end();
-      }
-      requestAnimationFrame(step);
-    }
 
     links.forEach(function (a) {
       a.addEventListener('click', function (e) {
@@ -875,11 +881,68 @@
         var target = id && id.charAt(0) === '#' && $(id);
         if (!target) return;              /* nema odredista -> pusti browser */
         e.preventDefault();
-        glide(targetY(target));
+        glideTo(targetY(target));
         /* Hash se upisuje bez skoka, da veza i dalje ostane deljiva.    */
         if (history.pushState) history.pushState(null, '', id);
       });
     });
+  }
+
+
+  /* ---------------------------------------------------------------
+     16. Nagovestaj na uvodu — jednokratni skrol nadole
+     ---------------------------------------------------------------
+     Gosti su javili da ostanu na uvodnom snimku i ne shvate da ima jos
+     sadrzaja. Glavni lek je natpis „Skrolujte" pod strelicama; ovo je
+     mreza ispod njega, za onoga ko i natpis promasi.
+
+     Pravila su namerno stroga, da ne ispadne da se sajt otima:
+       - ceka 8 s, i to tek POSTO se koverta sklonila i skrol otkljucao.
+         Racunica: koverta uzme ~3,8 s (snimak 2,77 s minus LEAD_S, pa
+         jos 1,5 s pretapanja), pa gost od klika do pomeraja ceka ~12 s.
+         Uvodni snimak vrti u krug (`loop`), pa ga presecanje ne prekida
+         ni na jednoj vrednosti;
+       - ide samo ako gost nije ni takao stranu i jos je na vrhu;
+       - bilo koji dodir, tocak, taster ili klik ga otkazuje;
+       - dogodi se NAJVISE JEDNOM po poseti (`sessionStorage`), pa
+         povratak na uvod vise nista ne pomera;
+       - koristi isti `glideTo` kao dugme, da izgleda kao namera, a ne
+         kao da je strana odskocila.                                    */
+  var NUDGE_MS = 8000;
+  var NUDGE_KEY = 'jms-intro-nudge';
+
+  function nudgeDone() {
+    try { sessionStorage.setItem(NUDGE_KEY, '1'); } catch (e) { /* nema veze */ }
+  }
+
+  function initIntroNudge() {
+    var hero = $('#hero');
+    if (!hero) return;
+    try { if (sessionStorage.getItem(NUDGE_KEY)) return; } catch (e) {}
+
+    var timer = null;
+    var events = ['wheel', 'touchstart', 'keydown', 'click', 'scroll'];
+
+    function off() {
+      events.forEach(function (n) { window.removeEventListener(n, cancel); });
+    }
+    /* Gost je sam nesto uradio — znaci zna da strana ide dalje. Gasi se
+       i pamti, da ga ni kasnije na uvodu nista ne trza.                 */
+    function cancel() {
+      clearTimeout(timer);
+      off();
+      nudgeDone();
+    }
+    events.forEach(function (n) {
+      window.addEventListener(n, cancel, { passive: true });
+    });
+
+    timer = setTimeout(function () {
+      off();                                   /* pusti `glideTo` da radi */
+      if (window.scrollY > 4) return nudgeDone();
+      nudgeDone();
+      glideTo(targetY(hero));
+    }, NUDGE_MS);
   }
 
   /* ---------------------------------------------------------------
