@@ -1,17 +1,41 @@
 # Jelena, Marko i Sofija — 08.11.2026.
 
 Jednostrani sajt za venčanje i Sofijin prvi rođendan.
-Čist HTML/CSS/JS, bez build-a i bez npm-a. Hostuje se besplatno na GitHub Pages.
+Čist HTML/CSS/JS, bez npm-a i bez ijedne zavisnosti. Hostuje se besplatno na
+GitHub Pages. Jedini „build" je `build.py` — obična Python skripta.
+
+**Menja se ono u `src/`. Ono u korenu je izlaz i prepisuje se.**
 
 ```
-index.html        sav tekst (ovde menjaj priču, FAQ, poruke)
-css/style.css     dizajn
-js/config.js      datum, adresa, telefoni, hoteli, RSVP link  ← ovde menjaj podatke
-js/main.js        logika (odbrojavanje, kalendar, forma, animacije)
-img/              fotografije (vidi img/README.md)
-media/            video koverte, intro video, muzika
-apps-script/      kod za Google tabelu sa prijavama
+src/index.html      sav tekst (ovde menjaj priču, poruke)   ← MENJAJ OVDE
+src/css/style.css   dizajn                                   ← MENJAJ OVDE
+src/js/config.js    datum, adresa, telefoni, hoteli, RSVP    ← MENJAJ OVDE
+src/js/main.js      logika (odbrojavanje, kalendar, forma)   ← MENJAJ OVDE
+
+build.py            skida komentare i pravi verziju za goste
+index.html          IZLAZ — ne diraj, prepisuje se
+css/, js/           IZLAZ — ne diraj, prepisuju se
+
+img/                fotografije (vidi img/README.md)
+media/              video koverte, intro video, muzika
+apps-script/        kod za Google tabelu sa prijavama
 ```
+
+### Kako se pravi verzija za goste
+
+```bash
+python3 build.py
+```
+
+Skida sve komentare (~37% manje koda) i na `css`/`js` linkove zalepi otisak
+sadržaja (`style.css?v=1cd467c2`), da gostima koji su već bili na sajtu ne
+ostane stara verzija u kešu.
+
+GitHub Pages služi koren, pa **izlaz mora da ide u git** zajedno sa `src/`.
+Redosled je uvek: izmeni `src/` → `python3 build.py` → commit.
+
+Ako slučajno izmeniš fajl u korenu, build to primeti i stane pre nego što
+prepiše izmene (pamti otisak svakog izlaza u `.build-manifest.json`).
 
 ---
 
@@ -29,7 +53,7 @@ fontovi rade lošije preko `file://`.)
 
 ## 2. Šta OBAVEZNO promeniti pre deljenja
 
-Sve je u `js/config.js`, označeno sa `TODO`:
+Sve je u `src/js/config.js`, označeno sa `TODO`:
 
 1. **Adresa restorana** — `venue.address`, `venue.city`, `venue.mapQuery`.
    Trenutno stoji ono što je nađeno pretragom (*Divine Sala, Živojina Lazića
@@ -39,7 +63,7 @@ Sve je u `js/config.js`, označeno sa `TODO`:
 3. **RSVP link** — `rsvpEndpoint` (vidi sekciju 3).
 4. **Hoteli** — `hotels`: proveri nazive i dodaj telefone.
 
-Opciono: tekst „Naše priče" i Sofijine sekcije u `index.html` (traži `TODO`),
+Opciono: tekst „Naše priče" i Sofijine sekcije u `src/index.html` (traži `TODO`),
 i slike u `img/` (vidi `img/README.md`).
 
 ---
@@ -58,7 +82,7 @@ ispisuje podatke u konzolu browsera, ali ništa ne šalje. Kad budeš spreman:
    - *Who has access:* **Anyone**  ← bez ovoga forma ne radi
 6. Odobri dozvole kad Google pita (klikni *Advanced → Go to project*).
 7. Kopiraj **Web app URL** (završava se na `/exec`) i nalepi ga u
-   `js/config.js` → `rsvpEndpoint`.
+   `src/js/config.js` → `rsvpEndpoint`.
 8. Otvori tu `/exec` adresu u browseru — treba da piše `{"ok":true,...}`.
 
 > **Najčešća greška:** kad kasnije promeniš `Code.gs`, moraš ponovo
@@ -111,7 +135,7 @@ Pa kod registrara napravi `CNAME` zapis ka `<korisnik>.github.io`
   hero-u namerno NEMA RSVP dugmeta — da gost prvo vidi stranu, a ne da
   jednim klikom preskoči sve. Kome se ne čeka, prečica je i dalje u meniju.
   Gost koji je već potvrdio (pamti se u `localStorage`) ne vidi traku.
-  Prag i logika: `js/main.js` → `initRsvpBar`.
+  Prag i logika: `src/js/main.js` → `initRsvpBar`.
 - **Sve fotografije se učitavaju odmah** sa stranom (nema `loading="lazy"`), pa
   ne „uskaču" dok gost skroluje. Cena: ~1,3 MB slika na prvo otvaranje. Hero
   ima `fetchpriority="high"` i `preload`, pa se on i dalje prvi pojavi.
@@ -122,13 +146,14 @@ Pa kod registrara napravi `CNAME` zapis ka `<korisnik>.github.io`
   postoji dugme „Prijavi ponovo".
 - **Animacije** se same isključuju ako gost u telefonu ima uključeno
   *Reduce Motion*.
-- **Bez predloga za prevod:** u `index.html` je `<meta name="google" content="notranslate">`,
+- **Bez predloga za prevod:** u `src/index.html` je `<meta name="google" content="notranslate">`,
   pa Chrome ne izbacuje traku „Prevedi stranu?" gostima čiji je telefon na
   engleskom/nemačkom. Gost i dalje može ručno da prevede ako želi (desni klik →
   Prevedi). Ako želiš da i to onemogućiš, dodaj `translate="no"` na `<html>` tag —
   ali onda rodbina iz inostranstva nema opciju prevoda.
 - Slike su privremene, sa Pexels-a (besplatna licenca, bez obaveze potpisa).
-- **Keširanje:** posle promene u `config.js` ili slikama, GitHub Pages i
-  browseri gostiju drže staru verziju još ~10 minuta. Ako ti treba da se
-  promena vidi odmah (npr. ispravka adrese), u `index.html` promeni
-  `<script src="js/config.js">` u `js/config.js?v=2` (pa `v=3` sledeći put).
+- **Keširanje:** `build.py` sam lepi otisak sadržaja na `css` i `js`
+  (`config.js?v=ce3347fa`), pa gost posle tvoje izmene odmah dobija novu
+  verziju — ne treba više ručno dizati `?v=2`. Za **slike** to i dalje ne
+  važi: ako zameniš sliku pod istim imenom, keš zna da je drži još ~10
+  minuta; ili sačekaj, ili je nazovi drugačije.

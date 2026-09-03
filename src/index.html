@@ -4,13 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- Mora ovde, pre svega ostalog: posle osvezavanja browser vraca gosta na
+     staru poziciju skrola cim strana dobije punu visinu, a to ume i posle
+     DOMContentLoaded — kad se slike doucitaju. js/main.js se ucitava tek na
+     kraju <body>, prekasno da to stigne da spreci; koverta bi tada pokrivala
+     sredinu strane i gost bi po njenom odlasku sleteo tamo umesto na pocetak.
+     Ovako se restauracija nikad i ne zakaze. Kad koverta ode, initEnvelope
+     vraca podrazumevano 'auto'. -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
 <meta name="theme-color" content="#2F5D5B">
-
+<!-- Chrome / Google Translate: ne predlaži prevod ove strane. Sajt je namerno
+     samo na srpskom, pa gostima ne treba da iskače traka „Prevedi stranu?". -->
 <meta name="google" content="notranslate">
 
+<!-- Privatna pozivnica: ne indeksirati. robots.txt zabranjuje obilaženje, a ovaj
+     tag hvata i botove koji stranu ipak dohvate (npr. preko podeljenog linka). -->
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 
 <meta property="og:type" content="website">
@@ -19,6 +29,24 @@
 <meta property="og:title" content="Jelena, Marko i Sofija · 08.11.2026.">
 <meta property="og:description" content="Pozivamo Vas na naše venčanje i Sofijin prvi rođendan — 8. novembra 2026. u Kraljevu.">
 
+<!-- Slika u pretpregledu (Viber, WhatsApp, Messenger…) je MONOGRAM, ne
+     hero fotografija: pozivnica je privatna, pa u tudjem cetu treba da
+     stoji nas znak, a ne slika sa nama.
+
+     Tri stvari ovde nisu kozmetika:
+       1. Adresa MORA da bude puna (https://…). Relativna putanja radi u
+          browseru, ali je citaci poruka cesto ne razrese i pretpregled
+          ostane bez slike.
+       2. Mora .png/.jpg — Viber i WhatsApp ne umeju SVG, pa favicon.svg
+          ovde ne moze da posluzi.
+       3. Sirina/visina pomazu da se odmah nacrta veliki pretpregled, bez
+          cekanja da se slika preuzme.
+
+     Sama slika se pravi iz istog monograma kao na sajtu (Cormorant
+     Garamond 300, J i M u --shell, S u --sage preko --ink podloge).
+     PAZI: citaci poruka kesiraju pretpregled po adresi. Ako se slika
+     menja, promeni i ime fajla — inace se starima i dalje prikazuje
+     stara.                                                             -->
 <meta property="og:image" content="https://vencanje.wolfit.rs/img/share-jsm.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -28,20 +56,51 @@
 <meta name="twitter:image" content="https://vencanje.wolfit.rs/img/share-jsm.png">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Ikonica za „Dodaj na pocetni ekran" MORA da bude .png: iOS ne ume SVG
+     ovde, pa je gost koji sacuva pozivnicu na pocetni ekran dosad dobijao
+     sivu slicicu strane umesto znaka. 180x180 je mera za danasnje iPhone-e,
+     ostale iOS sam smanjuje. Stoji u korenu i pod podrazumevanim imenom,
+     pa je iOS nalazi i kada ovog reda nema.
 
+     Slika je bez providnosti i bez zaobljenih ivica — iOS providnost slozi
+     na crno, a ivice sam zaobli. Boje su iste kao favicon.svg (podloga
+     #2F5D5B, J i M #FBF7EF, S #8FA39B), samo je slovo iz Cormorant
+     Garamond-a kao na sajtu, jer .png ne zavisi od ucitanog fonta.     -->
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
+<!-- Bez ovoga bi ispod ikonice stajao ceo <title> („Jelena, Marko i
+     Sofija · 08.11.2026."), a iOS ga skrati na par slova. -->
 <meta name="apple-mobile-web-app-title" content="Venčanje">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="media/envelope-poster.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1cd467c2">
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
+<!-- ============================== KOVERTA =============================
+     Prvo sto gost vidi. Ceo ekran je video; dodir ga otvara i TIM dodirom
+     krece muzika — pretrazivaci ne daju zvuk bez gesta gosta.
+
+     Snimak SAM otvara kovertu, pa nema `loop` — vratio bi je u zatvoreno
+     stanje. Bez JS-a `autoplay` ga pusti odmah; sa JS-om ga initEnvelope
+     zaustavi na prvom kadru i pusti tek na dodir, da gost ne propusti
+     otvaranje.
+
+     Otvara se SAMO na dodir, nikad sama od sebe — nema tajmera. Dodir
+     prima #envOpen, nevidljiv checkbox preko celog ekrana; on je i
+     razlog zasto koverta radi bez JS-a (`:checked` pali gasenje) i zasto
+     tastatura radi bez koda (checkbox se fokusira, razmak ga cekira).
+
+     ZAMENA KOVERTE: dovoljno je zameniti media/envelope.mp4 i njegov
+     poster (i `preload` link u <head>). Ovaj snimak je smanjena kopija
+     korena intro-video-jsm-v3.mp4 (2160x3840, 15,4 MB) — original se ne
+     dira, ovde stoji 1080x1920 verzija od 1,7 MB:
+       ffmpeg -i intro-video-jsm-v3.mp4 -vf "scale=1080:1920:flags=lanczos" \
+              -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -an \
+              -movflags +faststart media/envelope.mp4                  -->
 <input class="env__key" id="envOpen" type="checkbox" autocomplete="off" aria-label="Otvorite pozivnicu">
 <div class="env" id="envelope" aria-hidden="true">
   <div class="env__stage">
@@ -54,6 +113,7 @@
 <div class="grain" aria-hidden="true"></div>
 <a class="skip-link" href="#poziv">Preskoči na sadržaj</a>
 
+<!-- ============================ NAVIGACIJA ============================ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
     <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
@@ -72,7 +132,7 @@
         <li><a href="#program">Program</a></li>
         <li><a href="#lokacija">Lokacija</a></li>
         <li><a href="#smestaj">Smeštaj</a></li>
-
+        <!-- <li><a href="#pitanja">Pitanja</a></li> -->
       </ul>
       <a class="btn btn--ghost nav__cta" href="#rsvp">Potvrdi dolazak</a>
     </nav>
@@ -81,6 +141,9 @@
 
 <main>
 
+<!-- ============================== UVOD ===============================
+     Novi prvi ekran: video preko celog kadra, tekst direktno na njemu.
+     Stari hero sa fotografijom ostaje odmah ispod, netaknut.          -->
 <section class="intro" id="intro">
   <div class="intro__media">
     <video id="introVideo" src="media/hero-video.mp4" poster="media/hero-video-poster.jpg"
@@ -100,6 +163,8 @@
     <p class="intro__date"><span>08</span><i aria-hidden="true">·</i><span>11</span><i aria-hidden="true">·</i><span>2026</span></p>
   </div>
 
+  <!-- Devet praznih <span>-ova su tri kolone x tri reda strelica; oblik i
+       talas nadole crta CSS (.intro__scroll), pa markup ostaje prazan. -->
   <a class="intro__scroll" href="#hero" aria-label="Nastavi dalje">
     <span></span><span></span><span></span>
     <span></span><span></span><span></span>
@@ -107,6 +172,7 @@
   </a>
 </section>
 
+<!-- ============================== HERO =============================== -->
 <section class="hero" id="hero">
   <div class="hero__media">
     <img src="img/hero.jpg" alt="Jelena i Marko pored bazena" width="1200" height="900" fetchpriority="high">
@@ -136,6 +202,7 @@
   <a class="hero__scroll" href="#poziv" aria-label="Nastavi dalje"><span></span></a>
 </section>
 
+<!-- ============================== POZIV ============================== -->
 <section class="poziv" id="poziv">
   <div class="wrap wrap--narrow center">
     <span class="ornament" aria-hidden="true"></span>
@@ -144,6 +211,7 @@
   </div>
 </section>
 
+<!-- ============================ ODBROJAVANJE ========================= -->
 <section class="count" id="odbrojavanje">
   <div class="wrap center">
     <p class="label" data-reveal>Do našeg dana</p>
@@ -157,6 +225,7 @@
   </div>
 </section>
 
+<!-- ============================ NAŠA PRIČA =========================== -->
 <section class="section section--sand" id="prica">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>01 — Naša priča</p>
@@ -164,7 +233,7 @@
     <div class="split">
       <div class="split__text" data-reveal>
         <h2 class="h2">Kako smo stigli dovde</h2>
-
+        <!-- TODO Marko: zameni ovaj tekst vašom pravom pričom. -->
         <p>Sve je počelo jednim običnim danom koji se nije završio kao obično. Od prvog
            razgovora do prve zajedničke jutarnje kafe prošlo je manje vremena nego što
            smo mogli da poverujemo, a godine su nam potom donele selidbe, putovanja,
@@ -180,19 +249,27 @@
   </div>
 </section>
 
+<!-- ===================== RAZDELNIK: priča -> Sofija =================== -->
+<!-- Ove dve sekcije su skoro iste boje, pa prelaz mora nešto da nosi.
+     Ranije je tu bila foto-traka; sada gradijent + ornament. -->
 <div class="divider" aria-hidden="true">
   <span data-reveal></span>
 </div>
 
+<!-- ============================== SOFIJA ============================= -->
 <section class="section section--soft" id="sofija">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>02 — Sofija</p>
 
+    <!-- Redosled je isti kao u sekciji 01: TEKST pa slika. Na telefonu se
+         tako obe sekcije otvaraju naslovom, a ne fotografijom. Na sirokom
+         ekranu slika se vraca levo (v. `.sofija__media` u @media bloku u
+         style.css), pa raspored i dalje ide naizmenicno sa sekcijom 01. -->
     <div class="sofija">
       <div class="sofija__text" data-reveal>
         <h2 class="h2 h2--soft">Sofija puni prvu godinu</h2>
         <span class="ornament ornament--left" aria-hidden="true"></span>
-
+        <!-- TODO Marko: dodaj Sofijin pravi datum rođenja ako želiš. -->
         <p>Istog dana kada kažemo „da", naša ćerka duva svoju prvu svećicu. Zato ovo nije
            samo venčanje — to je i prvi rođendan naše male porodice.</p>
         <p>Sofija Vas čeka sa tortom, i verovatno će zaspati pre kraja večeri. Do tada je
@@ -207,11 +284,13 @@
   </div>
 </section>
 
+<!-- ============================== PROGRAM ============================ -->
 <section class="section section--dark" id="program">
   <div class="wrap wrap--narrow">
     <p class="label label--sticky" data-reveal>03 — Program dana</p>
     <h2 class="h2 center" data-reveal>Nedelja, 8. novembar 2026.</h2>
 
+    <!-- Za dodatnu stavku: kopiraj jedan <li> i promeni vreme i tekst. -->
     <ol class="time">
       <li class="time__item" data-reveal>
         <span class="time__hour">15:00</span>
@@ -236,6 +315,17 @@
   </div>
 </section>
 
+<!-- ============================ TRAKA 2 ============================== -->
+<!-- PRIVREMENO ISKLJUČENO (sajt je bio predug). Da vratiš: obriši ovaj
+     uvodni red i zatvarač komentara na kraju bloka. Koristi `img/band-3.jpg`.
+
+<div class="band band--venue" data-parallax>
+  <div class="band__media"><img src="img/band-3.jpg" alt="Svečana sala restorana DIVINE" width="1537" height="1023"></div>
+  <p class="band__caption" data-reveal><span data-cfg="venue-name">Restoran DIVINE</span> &nbsp;·&nbsp; Kraljevo</p>
+</div>
+-->
+
+<!-- ============================= LOKACIJA ============================ -->
 <section class="section section--sand" id="lokacija">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>04 — Lokacija</p>
@@ -256,7 +346,7 @@
       </div>
 
       <div class="loc__map" data-reveal data-reveal-delay="1">
-
+        <!-- Mapa se ubacuje iz js/main.js kada sekcija dođe blizu ekrana. -->
         <div class="loc__map-holder" data-map>
           <p class="note">Mapa se učitava…</p>
         </div>
@@ -265,6 +355,7 @@
   </div>
 </section>
 
+<!-- ============================== SMEŠTAJ ============================ -->
 <section class="section section--dark" id="smestaj">
   <div class="wrap">
     <p class="label label--sticky" data-reveal>05 — Smeštaj</p>
@@ -273,15 +364,51 @@
       Za goste koji dolaze iz drugih gradova — nekoliko predloga. Preporučujemo da
       rezervišete ranije.
     </p>
-    <div class="cards" id="hotels"></div>
+    <div class="cards" id="hotels"><!-- puni se iz js/config.js --></div>
   </div>
 </section>
+
+<!-- ============================== PITANJA ============================ -->
+<!-- PRIVREMENO ISKLJUČENO (sajt je bio predug). Da vratiš: obriši ovaj
+     uvodni red i zatvarač komentara na kraju bloka. Kad ga vratis, RSVP nazad na `07 — Potvrda dolaska`.
+
+<section class="section section--sand" id="pitanja">
+  <div class="wrap wrap--narrow">
+    <p class="label label--sticky" data-reveal>06 — Česta pitanja</p>
+    <h2 class="h2 center" data-reveal>Sve što bi moglo da Vas zanima</h2>
+
+    <div class="faq" data-reveal>
+      <details class="faq__item">
+        <summary>Do kada treba da potvrdim dolazak?</summary>
+        <div class="faq__body"><p>Do <strong data-cfg="deadline">20.10.2026.</strong> Najlakše je preko forme na
+          ovoj strani, ali možete nas i pozvati — brojevi su na dnu.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Mogu li da dovedem decu?</summary>
+        <div class="faq__body"><p>Naravno. Sofija bi se najviše obradovala društvu. Kada prijavljujete
+          dolazak, u broj gostiju uračunajte i decu.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Da li ima parkinga?</summary>
+        <div class="faq__body"><p>Ima — besplatan parking je ispred restorana.</p></div>
+      </details>
+      <details class="faq__item">
+        <summary>Kome da se obratim ako nešto nije jasno?</summary>
+        <div class="faq__body"><p>Pozovite nas, tu smo: <span data-cfg="contacts-inline">Jelena i Marko</span>.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+-->
+
+<!-- ============================ TRAKA 3 ============================== -->
 
 <div class="band band--dark" data-parallax>
   <div class="band__media"><img src="img/band-2.jpg" alt="" width="1500" height="830"></div>
   <p class="band__quote" data-reveal>Sve što nam treba<br>je da budete tu.</p>
 </div>
 
+<!-- =============================== RSVP ============================== -->
 <section class="section section--dark" id="rsvp">
   <div class="wrap wrap--narrow">
     <p class="label label--sticky" data-reveal>06 — Potvrda dolaska</p>
@@ -331,6 +458,7 @@
           <p class="note">Uračunajte i decu.</p>
         </div>
 
+        <!-- zamka za botove: pravi ljudi ovo ne vide -->
         <div class="hp" aria-hidden="true">
           <label for="website">Sajt</label>
           <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
@@ -346,7 +474,7 @@
 
       <div class="rsvp__contact">
         <p class="note">Ako Vam je lakše telefonom — pozovite nas ili nam pišite.</p>
-        <div class="rsvp__buttons" id="contactButtons"></div>
+        <div class="rsvp__buttons" id="contactButtons"><!-- puni se iz js/config.js --></div>
       </div>
     </div>
   </div>
@@ -354,6 +482,7 @@
 
 </main>
 
+<!-- ============================== FOOTER ============================= -->
 <footer class="foot">
   <svg class="foot__mark" viewBox="0 26 200 96" aria-hidden="true">
       <text class="mono__s" x="54.59" y="92">S</text>
@@ -365,11 +494,26 @@
   <p class="foot__bye">Vidimo se 8. novembra.</p>
 </footer>
 
+<!-- ==================== LEBDEĆE DUGME ZA POTVRDU =====================
+     U hero-u više nema RSVP dugmeta — namerno, da gost prvo prođe kroz
+     stranu. Ova traka se pojavi kad stigne do „Programa" (dakle video je
+     priču i Sofiju) i sakrije se kad dođe do same forme, da ne stoji
+     preko nje ni preko futera. Logika je u js/main.js -> initRsvpBar. -->
 <a class="rsvp-bar" id="rsvpBar" href="#rsvp">
   <span class="rsvp-bar__label">Potvrdi dolazak</span>
   <span class="rsvp-bar__note">do <span data-cfg="deadline">20.10.2026.</span></span>
 </a>
 
+<!-- ======================== MUZIKA U POZADINI ========================
+     Krece tek na dodir koverte (v. initSound / startMedia u js/main.js).
+     Dugme ostaje gostu na raspolaganju do kraja strane.
+
+     Pusta se prekodirana verzija na 128 kbps (3,6 MB umesto 9,2 MB) —
+     razlika se na telefonu ne cuje, a gost skida 5,6 MB manje. Original
+     na 320 kbps stoji pored, kao izvor za buduca prekodiranja:
+       ffmpeg -i background-music.mp3 -vn -c:a libmp3lame -b:a 128k \
+              -ar 44100 -ac 2 -map_metadata -1 background-music-128kbps.mp3
+-->
 <audio id="bgm" src="media/background-music-128kbps.mp3" loop preload="auto"></audio>
 
 <button class="sound" id="soundToggle" type="button" aria-pressed="false" aria-label="Uključi muziku">
@@ -383,7 +527,7 @@
   </svg>
 </button>
 
-<script src="js/config.js?v=ce3347fa"></script>
-<script src="js/main.js?v=f809c2b0"></script>
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

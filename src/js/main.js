@@ -1,3 +1,7 @@
+/* =================================================================
+   Jelena, Marko i Sofija — 08.11.2026.
+   Vanilla JS, bez zavisnosti. Podaci se čitaju iz js/config.js.
+   ================================================================= */
 (function () {
   'use strict';
 
@@ -8,16 +12,22 @@
   var START = new Date(C.startsAt);
   var END   = new Date(C.endsAt);
 
+  /* ---------------------------------------------------------------
+     1. Pomoćne funkcije
+     --------------------------------------------------------------- */
   function telHref(num) { return 'tel:' + String(num).replace(/[^\d+]/g, ''); }
-
+  /* Namerno bez ?body= — prefil teksta se razlikuje na iOS-u i Androidu,
+     a pogrešan format ume da pokvari primaoca. Ovako se svuda otvara
+     nova poruka sa upisanim brojem.                                    */
   function smsHref(num) { return 'sms:' + String(num).replace(/[^\d+]/g, ''); }
   function digits(num)  { return String(num).replace(/\D/g, ''); }
 
-  function srDate(iso) {
+  function srDate(iso) {                       // 2026-10-20 -> 20.10.2026.
     var p = String(iso).slice(0, 10).split('-');
     return p[2].replace(/^0/, '') + '.' + p[1].replace(/^0/, '') + '.' + p[0] + '.';
   }
 
+  /* Prisvojno: Sofija -> Sofijin, Marko -> Markov. */
   function possessive(name) {
     var last = name.slice(-1).toLowerCase();
     if (last === 'a') return name.slice(0, -1) + 'in';
@@ -29,6 +39,9 @@
     return String(C.venue.city || '').replace(/^\d+\s*/, '');
   }
 
+  /* ---------------------------------------------------------------
+     2. Ubacivanje podataka iz config.js u HTML
+     --------------------------------------------------------------- */
   function fillConfig() {
     var v = C.venue || {};
     var values = {
@@ -53,6 +66,7 @@
       if (href) el.setAttribute('href', href);
     });
 
+    // kontakti u tekstu FAQ-a
     var inline = $('[data-cfg="contacts-inline"]');
     if (inline && C.contacts) {
       inline.innerHTML = C.contacts.map(function (c) {
@@ -61,6 +75,9 @@
     }
   }
 
+  /* ---------------------------------------------------------------
+     3. Navigacija
+     --------------------------------------------------------------- */
   function initNav() {
     var nav = $('#nav'), toggle = $('#navToggle'), menu = $('#navMenu');
     if (!nav) return;
@@ -103,6 +120,17 @@
     }, { passive: true });
   }
 
+  /* ---------------------------------------------------------------
+     4. Hero: slova imena + ispisivanje monograma
+     --------------------------------------------------------------- */
+  /* Namerno razdvojeno na dva dela zbog koverte (sekcija 14):
+
+     prepareHero() — sečenje naslova na slova. Menja DOM, pa mora da se
+       desi ODMAH, dok je koverta još preko ekrana. Da čeka, strana bi
+       poskočila baš u trenutku kada se koverta digne.
+
+     playHero() — sama animacija. Čeka da koverta ode; inače bi se
+       monogram ispisao iza koverte i gost bi propustio ceo hero.       */
   function prepareHero() {
     var title = $('[data-split]');
     if (!title) return;
@@ -116,7 +144,8 @@
   }
 
   function playHero() {
-
+    /* `.hero .monogram`, ne `.monogram`: uvodna sekcija ima svoj monogram
+       i stoji IZNAD hero-a, pa bi goli selektor uhvatio pogrešan. */
     var hero = $('#hero'), mono = $('.hero .monogram');
     if (!hero) return;
 
@@ -128,9 +157,12 @@
     var done = false;
     var go = function () { if (!done) { done = true; requestAnimationFrame(play); } };
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
-    setTimeout(go, 1200);
+    setTimeout(go, 1200);                       // sigurnosna mreža
   }
 
+  /* ---------------------------------------------------------------
+     5. Otkrivanje sekcija pri skrolovanju
+     --------------------------------------------------------------- */
   function initReveal() {
     var items = $$('[data-reveal]');
     if (!('IntersectionObserver' in window)) {
@@ -152,6 +184,9 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+     6. Paralaks na foto-trakama
+     --------------------------------------------------------------- */
   function initParallax() {
     var bands = $$('[data-parallax]');
     if (!bands.length) return;
@@ -165,7 +200,7 @@
         if (r.bottom < -80 || r.top > vh + 80) return;
         var media = band.querySelector('.band__media');
         if (!media) return;
-        var progress = (r.top + r.height / 2 - vh / 2) / vh;
+        var progress = (r.top + r.height / 2 - vh / 2) / vh;   // ~ -1 .. 1
         var shift = -progress * factor * r.height;
         media.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
       });
@@ -181,6 +216,9 @@
     update();
   }
 
+  /* ---------------------------------------------------------------
+     7. Odbrojavanje
+     --------------------------------------------------------------- */
   function initCountdown() {
     var grid = $('#countdown'), done = $('#countdownDone');
     if (!grid) return;
@@ -227,6 +265,9 @@
     start();
   }
 
+  /* ---------------------------------------------------------------
+     8. Dodaj u kalendar (.ics + Google)
+     --------------------------------------------------------------- */
   function initCalendar() {
     var v = C.venue || {};
     var title = C.couple.bride + ', ' + C.couple.groom + ' i ' + C.couple.child +
@@ -245,9 +286,15 @@
       '&details=' + encodeURIComponent(details) +
       '&location=' + encodeURIComponent(where);
 
+    /* Podržan je samo Google kalendar — bez padajućeg menija, dugme vodi
+       direktno na Google. .ics i webcal opcije su uklonjene: na iPhone-u su
+       završavale kao fajl bez imena ili nisu radile uopšte.              */
     $$('[data-cal-google]').forEach(function (a) { a.href = gcal; });
   }
 
+  /* ---------------------------------------------------------------
+     9. Smeštaj (kartice iz config.js)
+     --------------------------------------------------------------- */
   function initHotels() {
     var box = $('#hotels');
     if (!box || !C.hotels) return;
@@ -267,11 +314,14 @@
     }).join('');
   }
 
+  /* ---------------------------------------------------------------
+     10. Kontakt dugmići ispod forme
+     --------------------------------------------------------------- */
   function initContacts() {
     var box = $('#contactButtons');
     if (!box || !C.contacts) return;
     box.innerHTML = C.contacts.map(function (c) {
-      var d = digits(c.phone);
+      var d = digits(c.phone);                        // 381600000000
       return '<div class="contact">' +
                '<p class="contact__name">' + c.name + '</p>' +
                '<p class="contact__num"><a href="' + telHref(c.phone) + '">' + c.phone + '</a></p>' +
@@ -284,6 +334,9 @@
     }).join('');
   }
 
+  /* ---------------------------------------------------------------
+     11. Mapa se učitava na klik + kopiranje adrese
+     --------------------------------------------------------------- */
   function initMap() {
     var holder = $('[data-map]');
     if (holder) {
@@ -295,16 +348,19 @@
         var v = C.venue || {};
         var q = encodeURIComponent(v.mapQuery || v.name);
         var f = document.createElement('iframe');
-
+        // hl=sr-Latn -> nazivi ulica latinicom (sa `sr` Google vraća ćirilicu)
         f.src = 'https://www.google.com/maps?q=' + q + '&output=embed&hl=sr-Latn';
         f.title = 'Mapa: ' + v.name;
         f.loading = 'lazy';
         f.referrerPolicy = 'no-referrer-when-downgrade';
         f.setAttribute('allowfullscreen', '');
         f.addEventListener('load', function () { holder.classList.add('is-loaded'); });
-        holder.appendChild(f);
+        holder.appendChild(f);   // ne brišemo poruku — mapa se preliva preko nje
       };
 
+      /* Mapa je ~800 KB, pa se ne učitava odmah sa stranom nego kada se
+         sekcija „Lokacija" približi ekranu. rootMargin daje glavu prednosti
+         da je mapa već tu kada gost stigne do nje.                        */
       if ('IntersectionObserver' in window) {
         var mapIO = new IntersectionObserver(function (entries) {
           for (var i = 0; i < entries.length; i++) {
@@ -360,6 +416,9 @@
     toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 2600);
   }
 
+  /* ---------------------------------------------------------------
+     12. RSVP forma
+     --------------------------------------------------------------- */
   var STORE = 'jms-rsvp-2026';
 
   function initRsvp() {
@@ -372,8 +431,9 @@
     var gosti   = $('#gostiField');
     var errIme  = $('[data-err="ime"]');
 
+    /* već potvrđeno? */
     var saved = null;
-    try { saved = JSON.parse(localStorage.getItem(STORE)); } catch (e) {   }
+    try { saved = JSON.parse(localStorage.getItem(STORE)); } catch (e) { /* nema veze */ }
     if (saved && saved.ime) {
       form.hidden = true;
       already.hidden = false;
@@ -387,6 +447,7 @@
       });
     }
 
+    /* „Ne mogu" sakriva broj gostiju */
     $$('input[name="dolazak"]', form).forEach(function (radio) {
       radio.addEventListener('change', function () {
         gosti.classList.toggle('is-collapsed', radio.value === 'Ne mogu' && radio.checked);
@@ -415,6 +476,7 @@
       var dolazak = (form.querySelector('input[name="dolazak"]:checked') || {}).value || 'Dolazim';
       var coming  = dolazak === 'Dolazim';
 
+      /* zamka za botove — tiho "uspeh", ništa se ne šalje */
       if ($('#website').value) { showSuccess(coming, ime, dolazak, true); return; }
 
       var payload = {
@@ -443,7 +505,7 @@
       if (silent) return;
       try {
         localStorage.setItem(STORE, JSON.stringify({ ime: ime, dolazak: dolazak, at: Date.now() }));
-      } catch (e) {   }
+      } catch (e) { /* privatni režim — nema veze */ }
       setTimeout(function () {
         form.hidden = true;
         already.hidden = false;
@@ -454,6 +516,7 @@
   function send(payload) {
     var url = C.rsvpEndpoint;
 
+    /* demo režim: nema endpointa — ispiši u konzolu i prijavi uspeh */
     if (!url) {
       console.info('[RSVP demo] Nema CONFIG.rsvpEndpoint — podaci NISU poslati:', payload);
       return new Promise(function (res) { setTimeout(res, 550); });
@@ -462,8 +525,9 @@
     var body = JSON.stringify(payload);
     var opts = { method: 'POST', body: body, headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
 
+    /* text/plain = "simple request" → nema CORS preflight-a koji Apps Script ne voli */
     return fetch(url, opts).catch(function () {
-
+      /* rezerva: pošalji naslepo (red ipak stigne u tabelu) */
       return fetch(url, {
         method: 'POST', mode: 'no-cors', body: body,
         headers: { 'Content-Type': 'text/plain;charset=utf-8' }
@@ -471,26 +535,32 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+     13. Lebdeće dugme za potvrdu dolaska
+     --------------------------------------------------------------- */
   function initRsvpBar() {
     var bar = $('#rsvpBar'), program = $('#program'), rsvp = $('#rsvp');
     if (!bar || !program || !rsvp) return;
 
+    /* Ko je već potvrdio, njega traka ne treba da gnjavi do kraja strane. */
     try {
       var saved = JSON.parse(localStorage.getItem(STORE));
       if (saved && saved.ime) return;
-    } catch (e) {   }
+    } catch (e) { /* privatni režim — samo nastavi */ }
 
     function docTop(el) { return el.getBoundingClientRect().top + window.scrollY; }
 
     var pending = false;
     function update() {
       var y = window.scrollY, vh = window.innerHeight;
-
+      /* Pojavi se kad „Program" uđe u kadar — dotle je gost prošao priču i
+         Sofiju. Sakrij se kad stigne do forme i ostani sakrivena (ispod je
+         futer, ne želimo traku preko njega).                             */
       var pastIntro   = y + vh * 0.65 > docTop(program);
       var reachedForm = y + vh > docTop(rsvp) + 120;
       var on = pastIntro && !reachedForm;
       bar.classList.toggle('is-on', on);
-
+      /* dugme za zvuk se sklanja iznad trake — v. `body.has-bar .sound` */
       document.body.classList.toggle('has-bar', on);
       pending = false;
     }
@@ -504,7 +574,13 @@
     update();
   }
 
-  var VOL = 0.3;
+  /* ---------------------------------------------------------------
+     14. Uvodni snimak i muzika u pozadini
+
+     Pretraživači ne puštaju zvuk bez gesta gosta. Zato muzika kreće tek
+     na dodir koverte, a posle toga gost ima dugme dokle god je na strani.
+     --------------------------------------------------------------- */
+  var VOL = 0.3;                     // isto kao na uzoru — 1.0 je vika
   var introVideo = null, bgm = null, soundBtn = null, soundOn = false;
 
   function initIntro() {
@@ -518,6 +594,7 @@
     soundBtn.setAttribute('aria-label', soundOn ? 'Isključi muziku' : 'Uključi muziku');
   }
 
+  /* Postepen ulazak — puna jačina preko podizanja koverte zvuči kao udarac. */
   function rampTo(target, ms) {
     if (!bgm) return;
     var from = bgm.volume, t0 = Date.now();
@@ -528,6 +605,8 @@
     })();
   }
 
+  /* MORA da se zove sinhrono iz gostovog gesta (klik na kovertu ili na
+     dugme). Odloženi play() gubi pravo na zvuk i pretraživač ga odbije. */
   function playMusic() {
     if (!bgm) return;
     bgm.volume = 0;
@@ -538,7 +617,7 @@
       p.then(function () { rampTo(VOL, 1200); })
        .catch(function () { soundOn = false; paintSound(); });
     } else {
-      rampTo(VOL, 1200);
+      rampTo(VOL, 1200);            // stariji browseri ne vraćaju obećanje
     }
   }
 
@@ -549,6 +628,8 @@
     paintSound();
   }
 
+  /* Snimak ide bez zvuka, pa sme uvek; muzika samo kad je gost stvarno
+     dodirnuo kovertu (`withSound`), ne kad se ona otvorila sama. */
   function startMedia(withSound) {
     if (introVideo) {
       introVideo.muted = true;
@@ -570,6 +651,7 @@
       if (soundOn) stopMusic(); else playMusic();
     });
 
+    /* Kad gost ode u drugi tab, muzika ćuti — ali pamtimo da ju je hteo. */
     document.addEventListener('visibilitychange', function () {
       if (!bgm) return;
       if (document.hidden) { bgm.pause(); return; }
@@ -580,9 +662,27 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+     15. Koverta koja se otvara pre sajta
+
+     Otvara se ISKLJUCIVO na gostov dodir — nema tajmera koji bi je
+     digao sam. To nije kozmetika: muzika sme da krene samo iz gesta,
+     pa bi koverta koja se otvori sama odvela gosta na sajt bez zvuka.
+
+     Sam dodir hvata #envOpen (nevidljiv checkbox preko celog ekrana,
+     v. sekciju „KOVERTA" u style.css). Zahvaljujuci njemu koverta se
+     otvara i kada JS zakaze, a tastatura radi bez ijedne linije koda.
+     Ovde se na isti dogadjaj samo pusta muzika i snimak.
+
+     `done` je playHero — hero se sprema cim pretapanje krene, da bude
+     gotov dok gost jos gleda uvodni ekran.
+     --------------------------------------------------------------- */
   function initEnvelope(done) {
     var env = $('#envelope'), key = $('#envOpen'), envVideo = $('#envVideo');
 
+    /* Oba broja moraju da prate css/style.css, sekciju KOVERTA:
+       EXIT_MS je trajanje pretapanja, LEAD_S koliko pre kraja snimka ono
+       krece (da se ne vidi zamrznut poslednji kadar).                    */
     var EXIT_MS = 1500;
     var LEAD_S = 0.5;
 
@@ -591,23 +691,45 @@
       if (key && key.parentNode) key.parentNode.removeChild(key);
     }
 
+    /* Jedini razlog da se koverta preskoči jeste da je nema u dokumentu.
+       Hash se NAMERNO ne gleda: koverta je početak svakog otvaranja sajta,
+       pa i kada gost dođe na /#rsvp iz poruke ili sa obeleživača. Hash i
+       dalje radi svoj posao unutar sajta — meni i ostale veze skroluju
+       kao i pre. `prefers-reduced-motion` se takođe namerno NE gleda —
+       animacija se u ovoj verziji pušta svima.                          */
     if (!env || !key) {
       drop();
       done();
       return;
     }
 
+    /* Posle osvežavanja browser ume da vrati stanje polja; čekirana
+       koverta bi se ugasila pre nego što je gost uopšte vidi. */
     key.checked = false;
 
     document.body.classList.add('is-envelope', 'is-locked');
 
+    /* CSS-ov `envOpen` je rezerva za slucaj bez JS-a i ide na tvrdo
+       otkucano vreme. Cim skripta radi, pretapanje vodi ona — po duzini
+       samog snimka — pa se rezerva gasi da se dve ne otimaju o ista
+       svojstva (animacija bi pobedila tranziciju).                       */
     env.style.animation = 'none';
 
+    /* Oba snimka stoje dok se čeka dodir: uvodni da gost ne propusti
+       početak petlje, a snimak koverte da se ne otvori pred gostom koji
+       još nije ni dodirnuo — otvaranje je poenta dodira.               */
     if (introVideo) introVideo.pause();
     if (envVideo) { envVideo.pause(); envVideo.currentTime = 0; }
 
+    /* Posle osvežavanja browser vraća gosta na staru poziciju skrola —
+       bez ovoga bi se koverta otvorila i otkrila sredinu strane.        */
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
+    /* Hash mora iz adrese, ne samo iz računice gore: `scrollTo(0, 0)` drži
+       samo za taj trenutak, a browser ume da skoči na odeljak i kasnije —
+       kad se slike doučitaju i raspored slegne. Tada bi se koverta digla
+       i otkrila sredinu strane. Brisanje ide preko `replaceState`, pa
+       gostu ne ostaje suvišan korak u istoriji.                          */
     if (location.hash && history.replaceState) {
       history.replaceState(null, '', location.pathname + location.search);
     }
@@ -616,20 +738,32 @@
 
     window.scrollTo(0, 0);
 
+    /* Jedan `scrollTo` nije dovoljan: browser ume da vrati staru poziciju i
+       POSLE ovog poziva, kad se slike doučitaju i strana dobije punu visinu.
+       Zato se vrh drži i na `load`, i još jednom pred samo pretapanje — da
+       gost koji dodirne kovertu odmah, dok se strana još slaže, ne sleti na
+       njenu sredinu.                                                       */
     window.addEventListener('load', function () {
       if (!exiting) window.scrollTo(0, 0);
     });
 
+    /* Pocetak pretapanja. Skidanje `is-envelope` ovde je poenta: uvodni
+       ekran ispod krece da sleti sa 1,02 na 1 u istih 1,5 s koliko
+       koverta bledi, pa se dva pokreta poklapaju umesto da se smenjuju.
+       `done` (playHero) ide odmah, da hero ispod bude spreman dok gost
+       jos gleda pretapanje. Snimak namerno i dalje svira.                */
     function exit() {
-      if (exiting) return;
+      if (exiting) return;                     // timeupdate, ended i mreža se preklapaju
       exiting = true;
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0);                   // poslednja provera pred otkrivanje
       env.classList.add('is-exiting');
       document.body.classList.remove('is-envelope');
       done();
       setTimeout(finish, EXIT_MS);
     }
 
+    /* Kraj. Skrol se otkljucava tek sada: dok pretapanje traje, uvod je
+       jos u `scale`, pa bi skrol kroz njega izgledao krivo.              */
     function finish() {
       if (finished) return;
       finished = true;
@@ -638,6 +772,8 @@
       drop();
     }
 
+    /* `change` stiže u istom koraku kao i gostov dodir, pa play() još ima
+       pravo na zvuk; odložen poziv bi ga izgubio i muzika bi ostala nema. */
     function open() {
       if (opened) return;
       opened = true;
@@ -646,13 +782,20 @@
         var e = envVideo.play();
         if (e && e['catch']) e['catch'](function () {});
       }
-
+      /* Mreža ako snimak uopšte ne krene: bez nje bi gost ostao da gleda
+         nepomičan kadar. Dužina je poznata čim stignu metapodaci; pre
+         toga je `duration` NaN, pa se računa sa poznatih 2,77 s.         */
       var lead = (envVideo && envVideo.duration ? envVideo.duration : 2.77) - LEAD_S;
       setTimeout(exit, lead * 1000 + 900);
     }
 
     key.addEventListener('change', function () { if (key.checked) open(); });
 
+    /* Ne čeka se `ended`: browser na samom kraju snimka ume da zadrži
+       zamrznut (ponekad crn) kadar, pa bi se on video na punoj vidljivosti.
+       Pretapanje zato kreće LEAD_S ranije i snimak se gasi dok u njemu jos
+       ima pokreta. `ended` ostaje rezerva ako `timeupdate` ne stigne da
+       pogodi prag (poslednji stiže na ~250 ms).                          */
     if (envVideo) {
       envVideo.addEventListener('timeupdate', function () {
         if (envVideo.duration && envVideo.duration - envVideo.currentTime <= LEAD_S) exit();
@@ -661,6 +804,16 @@
     }
   }
 
+  /* ---------------------------------------------------------------
+     15. Spori skrol (hero dugme „Potvrdi dolazak")
+     ---------------------------------------------------------------
+     Od heroa do RSVP-a ima cela strana, pa obicno „smooth" skrolovanje
+     tu prosvira kroz sve sekcije. Ovo je isti put, samo sporije i sa
+     mekim ulazom i izlazom — gost usput vidi da sajt ima jos toga.
+
+     Trajanje ide po duzini puta, ne fiksno: na telefonu je strana duza
+     nego na desktopu, pa bi isti broj milisekundi davao dva razlicita
+     osecaja brzine.                                                    */
   function initSlowScroll() {
     var links = $$('a[data-scroll-slow]');
     if (!links.length) return;
@@ -668,6 +821,8 @@
     var root = document.documentElement;
     var MIN = 900, MAX = 2400, PER_PX = 0.45;
 
+    /* Ista visina koju `scroll-padding-top` (CSS) daje svim ostalim
+       vezama, da dugme sleti tacno gde i meni i traka na dnu.          */
     function targetY(el) {
       var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
       var max = document.body.scrollHeight - window.innerHeight;
@@ -675,7 +830,7 @@
       return Math.max(0, Math.min(Math.round(y), max));
     }
 
-    function ease(t) {
+    function ease(t) {                                 // easeInOutCubic
       return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
@@ -686,6 +841,8 @@
       var ms = Math.min(MAX, Math.max(MIN, Math.abs(dist) * PER_PX));
       var t0 = null, stopped = false;
 
+      /* CSS `scroll-behavior:smooth` bi svaki `scrollTo` ispod jos jednom
+         zagladio i tukao bi se sa ovom animacijom — gasi se dok traje.  */
       var prev = root.style.scrollBehavior;
       root.style.scrollBehavior = 'auto';
 
@@ -703,7 +860,7 @@
       }
 
       function step(now) {
-        if (stopped) return end();
+        if (stopped) return end();                 /* gost je preuzeo skrol */
         if (t0 === null) t0 = now;
         var p = Math.min((now - t0) / ms, 1);
         window.scrollTo(0, from + dist * ease(p));
@@ -716,23 +873,26 @@
       a.addEventListener('click', function (e) {
         var id = a.getAttribute('href');
         var target = id && id.charAt(0) === '#' && $(id);
-        if (!target) return;
+        if (!target) return;              /* nema odredista -> pusti browser */
         e.preventDefault();
         glide(targetY(target));
-
+        /* Hash se upisuje bez skoka, da veza i dalje ostane deljiva.    */
         if (history.pushState) history.pushState(null, '', id);
       });
     });
   }
 
+  /* ---------------------------------------------------------------
+     Start
+     --------------------------------------------------------------- */
   function boot() {
     fillConfig();
     initNav();
-    prepareHero();
+    prepareHero();         // sečenje naslova odmah, dok koverta pokriva ekran
     initIntro();
     initHotels();
     initContacts();
-    initReveal();
+    initReveal();          // posle generisanih kartica
     initParallax();
     initCountdown();
     initCalendar();
@@ -741,7 +901,7 @@
     initRsvpBar();
     initSlowScroll();
     initSound();
-    initEnvelope(playHero);
+    initEnvelope(playHero);  // poslednje: hero animacija čeka na pretapanje koverte
   }
 
   if (document.readyState === 'loading') {
