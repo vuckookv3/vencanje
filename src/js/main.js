@@ -883,11 +883,55 @@
   }
 
   /* ---------------------------------------------------------------
+     Promena teme  (PRIVREMENO — proba druge palete)
+
+     Cela paleta je u :root, pa je prebacivanje samo jedan atribut na <html>:
+     bez atributa je tirkizna, data-theme="sage" je zalfija sa terakotom.
+
+     Prvo postavljanje NIJE ovde nego u <head> (index.html), jer se ovaj fajl
+     ucitava na kraju <body> — prekasno da se stigne pre prvog iscrtavanja.
+     Ovde je samo klik, pamcenje i boja trake browsera.
+
+     Kad proba prodje, ide napolje: ova funkcija, njen poziv u boot(), dugme
+     u index.html sa skriptom u <head>, i blok :root[data-theme="sage"].
+     --------------------------------------------------------------- */
+  var THEME_STORE = 'jms-theme';
+  var THEMES = {
+    /* boja trake browsera na telefonu = --ink svake teme */
+    '':     '#2F5D5B',
+    'sage': '#343A2D'
+  };
+
+  function initTheme() {
+    var btn = $('#themeToggle');
+    if (!btn) return;
+
+    var meta = $('meta[name="theme-color"]');
+    var root = document.documentElement;
+
+    function apply(name) {
+      if (name) root.setAttribute('data-theme', name);
+      else root.removeAttribute('data-theme');
+      if (meta && THEMES[name]) meta.setAttribute('content', THEMES[name]);
+      try { localStorage.setItem(THEME_STORE, name); } catch (e) { /* nema veze */ }
+    }
+
+    /* Skripta iz <head> je vec postavila atribut; ovde se samo uskladi
+       traka browsera, jer meta oznaka nije bila dirana.                */
+    apply(root.getAttribute('data-theme') || '');
+
+    btn.addEventListener('click', function () {
+      apply(root.getAttribute('data-theme') === 'sage' ? '' : 'sage');
+    });
+  }
+
+  /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
     fillConfig();
     initNav();
+    initTheme();           // privremeno: prebacivanje palete
     prepareHero();         // sečenje naslova odmah, dok koverta pokriva ekran
     initIntro();
     initHotels();

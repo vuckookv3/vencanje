@@ -12,6 +12,12 @@
      Ovako se restauracija nikad i ne zakaze. Kad koverta ode, initEnvelope
      vraca podrazumevano 'auto'. -->
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
+
+<!-- Takodje mora ovde: js/main.js se ucitava tek na kraju <body>, pa bi tema
+     iz proslog dolaska stigla tek posle prvog iscrtavanja i gost bi video
+     bljesak tirkiza pre nego sto se strana prebaci. Ovako je atribut na
+     <html> postavljen pre nego sto browser bilo sta nacrta. -->
+<script>try{var t=localStorage.getItem('jms-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
 <meta name="theme-color" content="#2F5D5B">
@@ -116,9 +122,18 @@
 <!-- ============================ NAVIGACIJA ============================ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
-    <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
-      <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
-    </a>
+    <div class="nav__brand">
+      <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
+        <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
+      </a>
+
+      <!-- PRIVREMENO: proba druge palete. Krug pokazuje boju teme u koju se
+           prelazi. Izbor pamti localStorage, a postavlja ga skripta u <head>
+           (pre prvog iscrtavanja). Kad proba prodje, ide napolje zajedno sa
+           blokom :root[data-theme="sage"] u css/style.css. -->
+      <button class="theme-btn" id="themeToggle" type="button"
+              aria-label="Promeni boje sajta" title="Promeni boje sajta"></button>
+    </div>
 
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
       <span class="nav__toggle-lines" aria-hidden="true"><i></i><i></i></span>

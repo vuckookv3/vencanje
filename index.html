@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>try{if('scrollRestoration' in history)history.scrollRestoration='manual';}catch(e){}</script>
+
+<script>try{var t=localStorage.getItem('jms-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <title>Jelena, Marko i Sofija · 08.11.2026.</title>
 <meta name="description" content="Sa zadovoljstvom Vas pozivamo na naše venčanje i prvi rođendan — 8. novembra 2026. u restoranu DIVINE u Kraljevu. Potvrdite dolazak do 20.10.2026.">
 <meta name="theme-color" content="#2F5D5B">
@@ -37,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="media/envelope-poster.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1cd467c2">
+<link rel="stylesheet" href="css/style.css?v=00cd65e2">
 </head>
 
 <body>
@@ -56,9 +58,14 @@
 
 <header class="nav" id="nav">
   <div class="nav__inner">
-    <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
-      <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
-    </a>
+    <div class="nav__brand">
+      <a class="nav__mark" href="#intro" aria-label="Na vrh strane">
+        <svg viewBox="18 28 164 90" aria-hidden="true" focusable="false"><text class="mono__s" x="54.59" y="92">S</text><text class="mono__j" x="24.34" y="92">J</text><text class="mono__m" x="102.03" y="92">M</text></svg>
+      </a>
+
+      <button class="theme-btn" id="themeToggle" type="button"
+              aria-label="Promeni boje sajta" title="Promeni boje sajta"></button>
+    </div>
 
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
       <span class="nav__toggle-lines" aria-hidden="true"><i></i><i></i></span>
@@ -384,6 +391,6 @@
 </button>
 
 <script src="js/config.js?v=ce3347fa"></script>
-<script src="js/main.js?v=f809c2b0"></script>
+<script src="js/main.js?v=cef2c322"></script>
 </body>
 </html>

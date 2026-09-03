@@ -23,6 +23,15 @@
   --shell-2:#EFE3DA;    /* Sofijina sekcija */
   --err:#9B2C2C;
 
+  /* Polja forme su jedina povrsina na sajtu koja je cisto bela, a ne --shell.
+     Kao token da bi druga tema mogla da je utopli.                        */
+  --field-bg:#fff;
+  /* Strelica na <select>. Boja je URL-kodirana UNUTAR data: adrese, pa u nju
+     ne moze da udje var() — zato ceo url stoji kao token, jednom po temi.  */
+  --select-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235F6350' stroke-width='1.2'/%3E%3C/svg%3E");
+  /* Boja u dugmetu za promenu teme: uvek pokazuje temu u koju se PRELAZI. */
+  --swatch:#848B79;
+
   /* Kanali za providne varijante. Kad menjas hex iznad, promeni i ovde.
      PAZI: --olive-dk-rgb i --shell-rgb NISU tacni parnjaci svojih hex-ova
      (--olive-dk je #2F5D5B = 47,93,91, a --shell je #FBF7EF = 251,247,239).
@@ -34,8 +43,11 @@
   --shell-rgb:244,237,225;
   --deep-rgb:11,30,29;  /* skoro crni tirkiz — senke i prevlake preko fotografija */
 
-  /* Fokus prsten: na svetlom --olive, tamne podloge ga preokrecu u --sage. */
+  /* Fokus prsten: na svetlom --olive, tamne podloge ga preokrecu u --focus-dark. */
   --focus:var(--olive);
+  /* Prsten na TAMNOJ podlozi. U tirkiznoj temi je to --sage, kao i pre; sage
+     tema ga odvaja jer joj je --sage pretopao da bi se video na --olive-dk. */
+  --focus-dark:var(--sage);
 
   /* Oreol oko svetlih slova koja stoje direktno na snimku ili fotografiji.
      Preko njih NEMA vela, pa citljivost drzi samo ovo: uska skoro neprozirna
@@ -76,6 +88,57 @@
   /* Pretapanje koverte trazi krivu koja i krece i staje meko; --ease je
      napred natovarena, pa ista duzina deluje kao rez.                   */
   --ease-io:cubic-bezier(.4,0,.2,1);
+}
+
+/* ---------------------- DRUGA TEMA: zalfija ----------------------
+   Privremena, za probu izgleda. Pali se dugmetom pored monograma; izbor se
+   pamti u localStorage pod 'jms-theme' i postavlja se u <head>, pre prvog
+   iscrtavanja, da ne bljesne tirkiz na osvezavanje.
+
+   Osnova je #848B79 i stoji NEDIRNUTA na --olive-dk (tamne sekcije,
+   odbrojavanje, puna dugmad) — to je boja koja se htela videti. Akcenat je
+   terakota, dopuna zalfije na tocku boja; tirkizna tema nema akcenat u
+   drugom tonu (--olive i --sage su joj ista vrednost), ovde ga ima.
+
+   PAZI: --olive-dk je srednji ton, pa je krem tekst na njemu na 3.30:1
+   umesto 6.93:1 koliko je u tirkiznoj. Veliki slog (odbrojavanje, naslovi)
+   se cita normalno, sitni potpisi u .section--dark su mekši nego pre.
+   To je svesno primljeno na znanje, ne previd.                          */
+:root[data-theme="sage"]{
+  --ink:#343A2D;        /* najtamnija zalfija */
+  --ink-soft:#5C6154;
+  --olive-dk:#848B79;   /* TRAZENA BOJA, doslovno */
+  --olive:#BC795C;      /* terakota — linije, fokus, hover na svetlom */
+  --olive-txt:#A15A33;  /* tamnija terakota za SITAN TEKST (4.88:1 na --shell) */
+  --sage:#EBC3A6;       /* svetla terakota — akcenat na tamnom */
+  --sand:#F2EDE1;
+  --shell:#FAF7F0;
+  --shell-2:#EDE6DA;
+  --err:#9B2C2C;
+
+  --field-bg:#FFFDFA;
+  --select-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236C7361' stroke-width='1.2'/%3E%3C/svg%3E");
+  --swatch:#2F5D5B;     /* pokazuje tirkiz — temu u koju se prelazi */
+
+  /* Isti odnosi kao u tirkiznoj temi: --olive-dk-rgb je namerno tamniji od
+     svog hex-a (nosi veo preko texture.jpg), a --shell-rgb je zapravo
+     --sand, ne --shell. Preneto tako da se izgled poklopi.               */
+  --ink-rgb:52,58,45;
+  --olive-dk-rgb:88,96,76;
+  --olive-rgb:188,121,92;
+  --sage-rgb:235,195,166;
+  --shell-rgb:242,237,225;
+  --deep-rgb:18,21,14;  /* skoro crna zalfija — senke i prevlake */
+
+  /* --sage je ovde pretopao da bi se video na --olive-dk (2.17:1), a da se
+     dovoljno posvetli izgubio bi se u --shell na monogramu. Zato prsten
+     dobija svoju vrednost: 3.08:1 na --olive-dk, 10.24:1 na --ink.       */
+  --focus-dark:#FBEDE3;
+
+  /* Tirkiz se tukao sa zelenilom na fotografijama, pa su bile prigusene.
+     Zalfiji zelenilo pristaje, pa se boja vraca skoro na punu.           */
+  --photo-story:saturate(.95);
+  --photo-band:saturate(.96);
 }
 
 /* ------------------------------- OSNOVA --------------------------- */
@@ -222,7 +285,7 @@ a{color:inherit}
 .section--dark,.count,.band,.foot,.nav,.loc__map-holder{
   --btn-flip-bg:var(--sand);
   --btn-flip-fg:var(--ink);
-  --focus:var(--sage);
+  --focus:var(--focus-dark);
 }
 /* ...a svetla kartica unutar tamne sekcije se vraća na tamno dugme. */
 .rsvp,.hero__card{
@@ -298,11 +361,36 @@ a{color:inherit}
   gap:1rem;height:var(--nav-h);padding-inline:var(--pad);
   max-width:var(--rail);margin-inline:auto;position:relative;z-index:2;
 }
+/* Monogram i dugme za temu idu u JEDNU grupu. .nav__inner je
+   `space-between` sa samo dva deteta u toku (na mobilnom monogram + hamburger,
+   na desktopu monogram + meni) — trece dete bi razvuklo raspored, pa se ovo
+   dvoje pakuje zajedno i grupa i dalje broji kao jedno.                   */
+.nav__brand{display:flex;align-items:center;gap:.15rem;position:relative;z-index:2}
+
 .nav__mark{display:flex;align-items:center;line-height:0;min-height:44px;
   padding-right:.5rem;position:relative;z-index:2}
 .nav__mark svg{height:1.5rem;width:auto}
 .nav .mono__j,.nav .mono__m{fill:var(--shell)}
 .nav .mono__s{fill:var(--sage);opacity:.9}
+
+/* Dugme za promenu teme: krug ispunjen bojom teme u koju se PRELAZI.
+   z-index:2 je obavezan — otvoren meni je fixed na z-index:1 i inace bi ga
+   pokrio (isto vazi za .nav__mark i .nav__toggle).                        */
+.theme-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;padding:0;                /* meta za prst, krug je manji */
+  background:none;border:0;cursor:pointer;color:inherit;
+  position:relative;z-index:2;
+}
+.theme-btn::before{
+  content:"";display:block;width:18px;height:18px;border-radius:50%;
+  background:var(--swatch);
+  border:1px solid currentColor;
+  transition:background .4s var(--ease),transform .25s var(--ease),
+             box-shadow .4s ease;
+}
+.theme-btn:hover::before{transform:scale(1.15)}
+.theme-btn:focus-visible{outline:2px solid var(--focus);outline-offset:-6px}
 
 .nav__toggle{
   display:inline-flex;align-items:center;gap:.6rem;
@@ -372,6 +460,10 @@ a{color:inherit}
   text-shadow:var(--halo);
 }
 .nav:not(.is-solid):not(.is-open) .nav__toggle-lines i{
+  box-shadow:0 1px 3px rgba(var(--deep-rgb),.92),0 2px 10px rgba(var(--deep-rgb),.6);
+}
+/* Krug je puna povrsina, ne slovo — oreol mu ide kao senka, ne text-shadow. */
+.nav:not(.is-solid):not(.is-open) .theme-btn::before{
   box-shadow:0 1px 3px rgba(var(--deep-rgb),.92),0 2px 10px rgba(var(--deep-rgb),.6);
 }
 .nav:not(.is-solid):not(.is-open) .nav__cta{
@@ -764,12 +856,12 @@ body.is-locked{overflow:hidden}
 .field input,.field select{
   width:100%;min-height:48px;padding:.85rem 1rem;
   font-family:var(--sans);font-weight:300;font-size:1rem;color:var(--ink);
-  background:#fff;border:1px solid rgba(var(--ink-rgb),.2);border-radius:0;
+  background:var(--field-bg);border:1px solid rgba(var(--ink-rgb),.2);border-radius:0;
   transition:border-color .25s;
 }
 .field select{
   appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235F6350' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-image:var(--select-chevron);
   background-repeat:no-repeat;background-position:right 1rem center;
   padding-right:2.5rem;
 }
@@ -786,7 +878,7 @@ body.is-locked{overflow:hidden}
   display:flex;align-items:center;justify-content:center;text-align:center;
   min-height:48px;padding:.5rem .75rem;line-height:1.3;
   font-size:.82rem;letter-spacing:.04em;
-  border:1px solid rgba(var(--ink-rgb),.2);background:#fff;
+  border:1px solid rgba(var(--ink-rgb),.2);background:var(--field-bg);
   transition:background .25s,color .25s,border-color .25s;
 }
 .pill input:checked+span{background:var(--olive-dk);border-color:var(--olive-dk);color:var(--shell)}

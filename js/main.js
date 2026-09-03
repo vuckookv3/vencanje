@@ -725,9 +725,38 @@
     });
   }
 
+  var THEME_STORE = 'jms-theme';
+  var THEMES = {
+
+    '':     '#2F5D5B',
+    'sage': '#343A2D'
+  };
+
+  function initTheme() {
+    var btn = $('#themeToggle');
+    if (!btn) return;
+
+    var meta = $('meta[name="theme-color"]');
+    var root = document.documentElement;
+
+    function apply(name) {
+      if (name) root.setAttribute('data-theme', name);
+      else root.removeAttribute('data-theme');
+      if (meta && THEMES[name]) meta.setAttribute('content', THEMES[name]);
+      try { localStorage.setItem(THEME_STORE, name); } catch (e) {   }
+    }
+
+    apply(root.getAttribute('data-theme') || '');
+
+    btn.addEventListener('click', function () {
+      apply(root.getAttribute('data-theme') === 'sage' ? '' : 'sage');
+    });
+  }
+
   function boot() {
     fillConfig();
     initNav();
+    initTheme();
     prepareHero();
     initIntro();
     initHotels();
