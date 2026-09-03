@@ -805,6 +805,84 @@
   }
 
   /* ---------------------------------------------------------------
+     15. Spori skrol (hero dugme „Potvrdi dolazak")
+     ---------------------------------------------------------------
+     Od heroa do RSVP-a ima cela strana, pa obicno „smooth" skrolovanje
+     tu prosvira kroz sve sekcije. Ovo je isti put, samo sporije i sa
+     mekim ulazom i izlazom — gost usput vidi da sajt ima jos toga.
+
+     Trajanje ide po duzini puta, ne fiksno: na telefonu je strana duza
+     nego na desktopu, pa bi isti broj milisekundi davao dva razlicita
+     osecaja brzine.                                                    */
+  function initSlowScroll() {
+    var links = $$('a[data-scroll-slow]');
+    if (!links.length) return;
+
+    var root = document.documentElement;
+    var MIN = 900, MAX = 2400, PER_PX = 0.45;
+
+    /* Ista visina koju `scroll-padding-top` (CSS) daje svim ostalim
+       vezama, da dugme sleti tacno gde i meni i traka na dnu.          */
+    function targetY(el) {
+      var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+      var max = document.body.scrollHeight - window.innerHeight;
+      var y = el.getBoundingClientRect().top + window.scrollY - pad;
+      return Math.max(0, Math.min(Math.round(y), max));
+    }
+
+    function ease(t) {                                 // easeInOutCubic
+      return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function glide(to) {
+      var from = window.scrollY;
+      var dist = to - from;
+      if (!dist) return;
+      var ms = Math.min(MAX, Math.max(MIN, Math.abs(dist) * PER_PX));
+      var t0 = null, stopped = false;
+
+      /* CSS `scroll-behavior:smooth` bi svaki `scrollTo` ispod jos jednom
+         zagladio i tukao bi se sa ovom animacijom — gasi se dok traje.  */
+      var prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+
+      function stop() { stopped = true; }
+      var opts = { passive: true };
+      window.addEventListener('wheel', stop, opts);
+      window.addEventListener('touchstart', stop, opts);
+      window.addEventListener('keydown', stop);
+
+      function end() {
+        root.style.scrollBehavior = prev;
+        window.removeEventListener('wheel', stop);
+        window.removeEventListener('touchstart', stop);
+        window.removeEventListener('keydown', stop);
+      }
+
+      function step(now) {
+        if (stopped) return end();                 /* gost je preuzeo skrol */
+        if (t0 === null) t0 = now;
+        var p = Math.min((now - t0) / ms, 1);
+        window.scrollTo(0, from + dist * ease(p));
+        if (p < 1) requestAnimationFrame(step); else end();
+      }
+      requestAnimationFrame(step);
+    }
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var id = a.getAttribute('href');
+        var target = id && id.charAt(0) === '#' && $(id);
+        if (!target) return;              /* nema odredista -> pusti browser */
+        e.preventDefault();
+        glide(targetY(target));
+        /* Hash se upisuje bez skoka, da veza i dalje ostane deljiva.    */
+        if (history.pushState) history.pushState(null, '', id);
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------
      Start
      --------------------------------------------------------------- */
   function boot() {
@@ -821,6 +899,7 @@
     initMap();
     initRsvp();
     initRsvpBar();
+    initSlowScroll();
     initSound();
     initEnvelope(playHero);  // poslednje: hero animacija čeka na pretapanje koverte
   }

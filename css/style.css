@@ -1107,9 +1107,25 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
 
    Oreol ide kroz `filter`, ne `box-shadow`: senka prati potez, dok bi
    `box-shadow` ocrtao ceo (nezarotirani) kvadrat.                      */
+/* Strelice su tanke crte, a stoje bas nad najsarenijim delom snimka (poplocan
+   pod), gde im `--halo-lt` sam nije dovoljan — oreol prati potez, pa izmedju
+   poteza sara i dalje probija. Zato ceo blok dobija svoju svetlu podlogu:
+   isti princip kao halo, samo veci i mekan, bez ivice.
+
+   Namerno NIJE ni „pilula" ni veo preko celog snimka: pilula bi u ovom
+   editorijalnom sklopu izgledala kao tudje dugme, a veo je iz uvoda vec
+   jednom svesno izbacen (vidi `.intro__media`) — snimak ide u punoj boji. */
+.intro__scroll::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  left:50%;top:50%;width:250%;height:270%;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse closest-side,
+    rgba(var(--shell-rgb),.72) 0%,
+    rgba(var(--shell-rgb),.5)  45%,
+    rgba(var(--shell-rgb),0)   100%);
+}
 .intro__scroll span{
   display:block;width:var(--cue);height:var(--cue);
-  border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);
+  border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
   filter:var(--halo-lt-svg);
   animation:cueChevron 2.4s var(--ease) infinite;
 }
@@ -1121,9 +1137,15 @@ body.is-envelope .intro__content{transform:scale(1.02);transition:none}
 .intro__scroll span:nth-child(n+4):nth-child(-n+6){animation-delay:.16s}
 .intro__scroll span:nth-child(n+7){animation-delay:.32s}
 /* Strelice se nikad ne gase do nule — poziv na skrol treba da stoji i
-   izmedju dva otkucaja; animacija samo prevuce svetliji talas nadole.  */
+   izmedju dva otkucaja; animacija samo prevuce svetliji talas nadole.
+
+   Mirno stanje je bilo .45 i to je bio glavni razlog sto se strelice
+   slabo vide: talas ih na tren upali, a najveci deo vremena stoje na
+   nepunoj polovini, preko sarenog poda. Sada mirno stanje drzi .78 —
+   dovoljno da se citaju i kad talas nije na njima, a razlika do 1 je
+   jos uvek vidljiva kao otkucaj.                                      */
 @keyframes cueChevron{
-  0%,100%{opacity:.45;transform:translateY(0) rotate(45deg)}
+  0%,100%{opacity:.78;transform:translateY(0) rotate(45deg)}
   40%{opacity:1;transform:translateY(calc(var(--cue) * .32)) rotate(45deg)}
 }
 
