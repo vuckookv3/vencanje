@@ -387,15 +387,33 @@ body.is-locked{overflow:hidden}
   padding:calc(var(--nav-h) + 2rem) var(--pad) 5rem;overflow:hidden;
 }
 .hero__media{position:absolute;inset:0;z-index:0}
-/* object-position je izračunat, ne pogođen:
-   58% po vertikali je jedini opseg u kom cela porodica (glava i stopala)
-   ostaje u kadru i na 1920x1080, gde se vidi samo 675 od 900 redova.
-   52% po horizontali ih centrira na telefonu, gde se vidi ~35% širine.
+/* object-position je izračunat, ne pogođen. Slika je 4:3, pa `cover` seče
+   po jednoj osi: na širokom ekranu odseca REDOVE (1920x1080 pokazuje 675
+   od 900), na telefonu odseca KOLONE (390x844 pokazuje ~416 od 1200).
+
+   25% po vertikali drži prazan prostor iznad Markove glave i na 2560x1080,
+   gde se vidi samo 506 redova — i to sa uračunatim `kenburns` zumom, koji
+   na početku (scale 1.09) dodatno odgrize 8%. Ispod, kadar pada na torzo.
+   57% po horizontali drži OBOJE u uskom prozoru telefona: kartica je tamo
+   centrirana i pokriva im lica (to je neizbežno — slika se po visini uvek
+   vidi cela, pa vertikalni broj na telefonu ne radi ništa), ali ispod nje
+   ostaju i njegova košulja i njena crvena haljina. Levo ostaje bazen — tu
+   na desktopu stoji kartica.
+
+   Ako menjaš sliku, proveri OBA broja, i to na 2560x1080 (najmanje mesta
+   iznad glava) i na 360x800 (najuži prozor) — to su dva granična slučaja.
+
+   Poznato ograničenje: između 1024px i ~1320px kartica stoji levo, a još
+   nema dovoljno mesta pored njih, pa pokriva Marka. Ne rešava se preko
+   `object-position` — na ekranu širem od 4:3 vide se SVE kolone, pa
+   horizontalni broj tu ništa ne menja. Uži kadar bi ga oslobodio, ali bi
+   na 1366-2560px (gde je većina gostiju) sliku stisnuo i Jeleni odsekao
+   kosu na desnoj ivici — zato je ostavljeno ovako.
 
    Bez `filter`: fotografija ide u punoj boji, kako je snimljena. Smirivanje
    zasićenja je namerno skinuto — boje sada nosi sama slika.             */
 .hero__media img{
-  width:100%;height:100%;object-fit:cover;object-position:52% 58%;
+  width:100%;height:100%;object-fit:cover;object-position:57% 25%;
 }
 .hero__card{
   position:relative;z-index:1;

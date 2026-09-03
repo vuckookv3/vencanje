@@ -9,7 +9,7 @@ sam kadrira. Bitno je da glavni motiv nije skroz na ivici.
 
 | Fajl | Gde se vidi | Preporučena veličina | Šta treba da bude na slici |
 |---|---|---|---|
-| `hero.jpg` | Prva slika, cela širina ekrana | **prava fotografija** (1200×900, 4:3) | Jelena, Marko i Sofija ispod rascvetalog drveta. Kadar i `object-position: 52% 58%` su izračunati tako da porodica ostane cela u kadru i desno od svetle kartice — ako menjaš sliku, proveri oba. |
+| `hero.jpg` | Prva slika, cela širina ekrana | **prava fotografija** (1200×900, 4:3) | Jelena i Marko pored bazena. Kadar i `object-position: 57% 25%` su izračunati tako da oba lica ostanu u kadru i desno od svetle kartice — ako menjaš sliku, proveri oba, i to na 2560×1080 (najmanje mesta iznad glava) i na 360×800 (najuži prozor). |
 | `story.jpg` | Sekcija „Naša priča" | **prava fotografija** (856×1070, 4:5) | Jelena i Marko na brodu. Izrezano iz Instagram screenshot-a — bez statusne trake, imena profila, značke „1/8", lajkova i komentara. |
 | `sofija.jpg` | Sekcija „Sofija" | **prava fotografija** (860×1075, 4:5) | Sofija. Seče se u oblik kapije (zaobljeno gore) — ostavi prostor iznad glave I centriraj lice po horizontali, inače luk odseče kosu sa strane. |
 | `band-2.jpg` | Traka pre RSVP forme | 1500–1800 px široko (pejzaž) | Tamniji, večernji kadar (preko njega ide citat). |
@@ -22,7 +22,7 @@ Smanji ih — telefoni troše mobilni internet. Cilj: **do 300 KB po slici**.
 
 Ovo je sada važnije nego ranije: sve slike se učitavaju odmah sa stranom (da ne
 „uskaču" pri skrolovanju), pa se njihova veličina sabira na prvom otvaranju.
-Trenutno je to ~1,3 MB ukupno.
+Trenutno je to ~1,0 MB ukupno.
 Na Macu, iz ovog foldera:
 
 ```bash
@@ -36,4 +36,4 @@ ImageOptim, pa vrati fajl u ovaj folder pod istim imenom.
 Ako promeniš proporcije slike, u `index.html` ispravi i `width`/`height`
 na odgovarajućem `<img>` tagu (sprečava „poskakivanje" strane pri učitavanju).
 
-Trenutno stanje: sve slike zajedno ~1.1 MB (`du -sh .`).
+Trenutno stanje: sve slike zajedno ~1.0 MB (`du -sh .`).
