@@ -26,6 +26,8 @@ window.CONFIG = {
 
   /* --- Rok za potvrdu dolaska --------------------------------------- */
   rsvpDeadline: '2026-10-20',
+  // Kasnije poslate pozivnice: link sa ?t=1 prikazuje ovaj rok.
+  rsvpDeadlineLate: '2026-11-01',
 
   /* --- Mesto -------------------------------------------------------- */
   venue: {

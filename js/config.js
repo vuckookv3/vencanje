@@ -12,6 +12,8 @@ window.CONFIG = {
 
   rsvpDeadline: '2026-10-20',
 
+  rsvpDeadlineLate: '2026-11-01',
+
   venue: {
     name: 'Restoran DIVINE',
 

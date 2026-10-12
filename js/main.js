@@ -31,12 +31,14 @@
 
   function fillConfig() {
     var v = C.venue || {};
+    var late = /[?&]t=1(&|$)/.test(location.search);
+    var deadline = late && C.rsvpDeadlineLate ? C.rsvpDeadlineLate : C.rsvpDeadline;
     var values = {
       'venue-name':    v.name,
       'venue-address': v.address,
       'venue-city':    v.city,
       'venue-short':   v.name + ', ' + cityShort(),
-      'deadline':      srDate(C.rsvpDeadline)
+      'deadline':      srDate(deadline)
     };
 
     $$('[data-cfg]').forEach(function (el) {
